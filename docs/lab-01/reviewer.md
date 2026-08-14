@@ -1,8 +1,12 @@
 # Peer Review
 
-- **Reviewer Name**: [Peer Name]
-- **Student ID**: [Peer Student ID]
-- **GitHub Username**: [Peer GitHub Username]
+- **Author Name**: aran edlek
+- **Author Student ID**: 67070505230
+- **Author GitHub Username**: aranedlek
+
+- **Reviewer Name**: jinjutha nannarumit
+- **Student ID**: 67070505210
+- **GitHub Username**: Ponatinylibug
 
 ## Reviewed PR Links
 1. Issue 1: https://github.com/aranedlek/toctickit/pull/5
