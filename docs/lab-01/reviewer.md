@@ -4,10 +4,10 @@
 ## Pull Requests I authored (reviewed by my partner)
 | PR | Branch | Reviewer verdict |
 |---|--------|------------------|
-| [#5](https://github.com/aranedlek/toctickit/pull/5) | feature/1-project-foundation | Approved |
-| [#6](https://github.com/aranedlek/toctickit/pull/6) | feature/2-api-endpoint | Approved |
-| [#7](https://github.com/aranedlek/toctickit/pull/7) | feature/3-category-seed | Approved |
-| [#8](https://github.com/aranedlek/toctickit/pull/8) | feature/4-categories-api | Approved |
+| https://github.com/aranedlek/toctickit/pull/5 | feature/1-project-foundation | Approved |
+| https://github.com/aranedlek/toctickit/pull/6 | feature/2-api-endpoint | Approved |
+| https://github.com/aranedlek/toctickit/pull/7 | feature/3-category-seed | Approved |
+| https://github.com/aranedlek/toctickit/pull/8 | feature/4-categories-api | Approved |
 
 Reviewer comment I received: Great job! Looks good to me.
 How I responded: Thank you!
