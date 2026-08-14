@@ -1,11 +1,39 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
 import heroImg from './assets/hero.png'
 import './App.css'
 
+const API_BASE = 'http://localhost:3000';
+
 function App() {
   const [count, setCount] = useState(0)
+  const [ticks, setTicks] = useState<number[]>([])
+  const [loading, setLoading] = useState(false)
+
+  // Fetch ticks on mount
+  useEffect(() => {
+    fetch(`${API_BASE}/api/ticks`)
+      .then((r) => r.json())
+      .then((data) => setTicks(data.ticks))
+      .catch(() => {/* backend not running */})
+  }, [])
+
+  const addTick = async () => {
+    setLoading(true)
+    try {
+      const res = await fetch(`${API_BASE}/api/ticks`, { method: 'POST' })
+      const data = await res.json()
+      setTicks(data.ticks)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const resetTicks = async () => {
+    await fetch(`${API_BASE}/api/ticks`, { method: 'DELETE' })
+    setTicks([])
+  }
 
   return (
     <>
@@ -30,7 +58,38 @@ function App() {
         </button>
       </section>
 
-      <div className="ticks"></div>
+      <div className="ticks">
+        <h2>Ticks <span className="ticks-count">({ticks.length})</span></h2>
+        <div className="ticks-actions">
+          <button
+            id="btn-add-tick"
+            type="button"
+            className="counter"
+            onClick={addTick}
+            disabled={loading}
+          >
+            {loading ? 'Adding…' : '+ Add Tick'}
+          </button>
+          <button
+            id="btn-reset-ticks"
+            type="button"
+            className="counter reset"
+            onClick={resetTicks}
+            disabled={ticks.length === 0}
+          >
+            Reset
+          </button>
+        </div>
+        {ticks.length === 0 ? (
+          <p className="ticks-empty">No ticks yet — press <strong>Add Tick</strong> to start!</p>
+        ) : (
+          <ol id="ticks-list" className="ticks-list">
+            {ticks.map((t) => (
+              <li key={t} className="tick-item">Tick #{t}</li>
+            ))}
+          </ol>
+        )}
+      </div>
 
       <section id="next-steps">
         <div id="docs">
@@ -113,7 +172,7 @@ function App() {
         </div>
       </section>
 
-      <div className="ticks"></div>
+
       <section id="spacer"></section>
     </>
   )
