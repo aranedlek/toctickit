@@ -58,7 +58,7 @@ describe('Frontend UI Tests', () => {
 
     await waitFor(() => {
       expect(screen.getByRole('alert')).toBeInTheDocument();
-      expect(screen.getByText(/Error 500: Failed to fetch categories/i)).toBeInTheDocument();
+      expect(screen.getByText(/System Status: Offline \(load failed\)/i)).toBeInTheDocument();
     });
   });
 });

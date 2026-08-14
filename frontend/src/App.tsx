@@ -9,69 +9,114 @@ interface Category {
 
 function App() {
   const [categories, setCategories] = useState<Category[]>([]);
+  const [systemStatus, setSystemStatus] = useState<'online' | 'offline' | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchCategories();
+    checkSystem();
   }, []);
 
-  const fetchCategories = async () => {
+  const checkSystem = async () => {
     setLoading(true);
     setError(null);
     try {
       const response = await fetch('/api/categories');
       if (!response.ok) {
-        throw new Error(`Error ${response.status}: Failed to fetch categories`);
+        throw new Error('System Status: Offline (load failed)');
       }
       const data = await response.json();
       setCategories(data.categories || []);
-    } catch (err: any) {
-      setError(err.message || 'Failed to fetch categories');
+      setSystemStatus('online');
+    } catch {
+      setSystemStatus('offline');
+      setError('System Status: Offline (load failed)');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="container py-5">
-      <header className="mb-4 text-center">
-        <h1 className="display-4 fw-bold text-primary">TokTickIT</h1>
-        <p className="lead text-secondary">Ticketing System Categories</p>
-      </header>
-
-      <main className="row justify-content-center">
-        <div className="col-md-8 col-lg-6">
-          {loading && (
-            <div className="alert alert-info text-center" role="status">
-              <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-              Loading categories...
-            </div>
-          )}
-
-          {error && (
-            <div className="alert alert-danger text-center" role="alert">
-              {error}
-            </div>
-          )}
-
-          {!loading && !error && (
-            <div className="card shadow-sm">
-              <div className="card-header bg-primary text-white">
-                <h5 className="card-title mb-0">Categories</h5>
-              </div>
-              <ul className="list-group list-group-flush" aria-label="Category list">
-                {categories.map((category) => (
-                  <li key={category.id} className="list-group-item d-flex align-items-center">
-                    <span className="badge bg-secondary me-3">#{category.id}</span>
-                    <span className="fw-medium">{category.name}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+    <div className="container min-vh-100 d-flex align-items-center justify-content-center py-5">
+      <div
+        className="card shadow-sm border p-4 bg-white"
+        style={{ maxWidth: '450px', width: '100%', borderRadius: '12px' }}
+      >
+        <div className="text-center mb-4">
+          <h1 className="h4 fw-bold mb-1 text-dark">TokTickIT IT Service Desk</h1>
+          <p className="text-muted small mb-0">Internal Service Desk Portal for IT Support Requests</p>
         </div>
-      </main>
+
+        <button
+          type="button"
+          className="btn btn-primary w-100 py-2 fw-medium mb-3 shadow-none"
+          onClick={checkSystem}
+          disabled={loading}
+          style={{ backgroundColor: '#0d6efd', borderColor: '#0d6efd', borderRadius: '6px' }}
+        >
+          {loading ? 'Checking...' : 'Check System'}
+        </button>
+
+        {loading && (
+          <div className="text-center py-2 text-muted small" role="status">
+            <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+            Loading categories...
+          </div>
+        )}
+
+        {!loading && systemStatus === 'offline' && (
+          <div>
+            <div
+              className="alert alert-danger py-2 mb-3 text-center border-0"
+              role="alert"
+              style={{ backgroundColor: '#f8d7da', color: '#842029', borderRadius: '6px' }}
+            >
+              <div className="fw-bold small mb-0">System Error</div>
+              <div className="small">{error}</div>
+            </div>
+
+            <div className="d-flex justify-content-between align-items-center pt-2 text-start small">
+              <span className="fw-semibold text-dark">System Status:</span>
+              <span className="badge bg-danger px-3 py-1 fw-normal" style={{ borderRadius: '4px' }}>Offline</span>
+            </div>
+          </div>
+        )}
+
+        {!loading && systemStatus === 'online' && (
+          <div>
+            <div className="d-flex justify-content-between align-items-center py-2 text-start small">
+              <span className="fw-semibold text-dark">System Status:</span>
+              <span className="badge bg-success px-3 py-1 fw-normal" style={{ borderRadius: '4px' }}>Online</span>
+            </div>
+
+            <div className="text-center text-muted small my-2" style={{ fontSize: '0.8rem' }}>
+              Service: TokTickIT API
+            </div>
+
+            <div className="mt-4 text-center">
+              <h6 className="fw-bold mb-3 text-dark small">Supported Request Categories</h6>
+              <div className="border rounded-2 overflow-hidden text-start" aria-label="Category list">
+                {categories.map((cat, idx) => (
+                  <div
+                    key={cat.id}
+                    className={`d-flex justify-content-between align-items-center py-2 px-3 small ${
+                      idx !== categories.length - 1 ? 'border-bottom' : ''
+                    }`}
+                  >
+                    <span className="text-secondary fw-normal">{cat.name}</span>
+                    <span
+                      className="badge bg-dark rounded-pill px-2 py-1"
+                      style={{ fontSize: '0.7rem', minWidth: '24px' }}
+                    >
+                      {String(cat.id).padStart(2, '0')}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
