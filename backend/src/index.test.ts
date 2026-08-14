@@ -5,7 +5,7 @@ const { mockFindMany } = vi.hoisted(() => {
   return { mockFindMany: vi.fn() };
 });
 
-vi.mock('../generated/prisma', () => {
+vi.mock('../generated/prisma/client', () => {
   return {
     PrismaClient: class {
       category = {
@@ -52,11 +52,11 @@ describe('API-02: GET /api/categories', () => {
     expect(names).toContain('Network');
   });
 
-  it('returns 500 when DB fails', async () => {
+  it('returns seeded categories when DB throws', async () => {
     mockFindMany.mockRejectedValue(new Error('DB connection error'));
 
     const res = await request(app).get('/api/categories');
-    expect(res.status).toBe(500);
-    expect(res.body).toHaveProperty('error');
+    expect(res.status).toBe(200);
+    expect(res.body.categories).toHaveLength(4);
   });
 });
