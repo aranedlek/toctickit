@@ -1,124 +1,98 @@
-import { useState, useEffect } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './App.css';
+import { useEffect, useState } from 'react';
+import './index.css';
+import { getStoredRequester, clearRequester, avatarColor, initials } from './utils';
+import RequesterSelector from './pages/RequesterSelector';
+import MyTickets from './pages/MyTickets';
+import CreateTicket from './pages/CreateTicket';
+import TicketDetail from './pages/TicketDetail';
+import type { Requester } from './types';
 
-interface Category {
-  id: number;
-  name: string;
-}
+type Route =
+  | { name: 'select' }
+  | { name: 'my-tickets' }
+  | { name: 'new-ticket' }
+  | { name: 'ticket-detail'; id: number };
 
-function App() {
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [systemStatus, setSystemStatus] = useState<'online' | 'offline' | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+export default function App() {
+  const [requester, setRequester] = useState<Requester | null>(getStoredRequester());
+  const [route, setRoute] = useState<Route>(
+    requester ? { name: 'my-tickets' } : { name: 'select' }
+  );
 
+  // Sync route when requester changes
   useEffect(() => {
-    checkSystem();
-  }, []);
+    if (!requester) setRoute({ name: 'select' });
+    else if (route.name === 'select') setRoute({ name: 'my-tickets' });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [requester]);
 
-  const checkSystem = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await fetch('/api/categories');
-      if (!response.ok) {
-        throw new Error('System Status: Offline (load failed)');
-      }
-      const data = await response.json();
-      setCategories(data.categories || []);
-      setSystemStatus('online');
-    } catch {
-      setSystemStatus('offline');
-      setError('System Status: Offline (load failed)');
-    } finally {
-      setLoading(false);
-    }
-  };
+  function handleSelectRequester(r: Requester) {
+    setRequester(r);
+    setRoute({ name: 'my-tickets' });
+  }
+
+  function handleSignOut() {
+    clearRequester();
+    setRequester(null);
+    setRoute({ name: 'select' });
+  }
 
   return (
-    <div className="container min-vh-100 d-flex align-items-center justify-content-center py-5">
-      <div
-        className="card shadow-sm border p-4 bg-white"
-        style={{ maxWidth: '450px', width: '100%', borderRadius: '12px' }}
-      >
-        <div className="text-center mb-4">
-          <h1 className="h4 fw-bold mb-1 text-dark">TokTickIT IT Service Desk</h1>
-          <p className="text-muted small mb-0">Internal Service Desk Portal for IT Support Requests</p>
-        </div>
-
-        <button
-          type="button"
-          className="btn btn-primary w-100 py-2 fw-medium mb-3 shadow-none"
-          onClick={checkSystem}
-          disabled={loading}
-          style={{ backgroundColor: '#0d6efd', borderColor: '#0d6efd', borderRadius: '6px' }}
-        >
-          {loading ? 'Checking...' : 'Check System'}
-        </button>
-
-        {loading && (
-          <div className="text-center py-2 text-muted small" role="status">
-            <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-            Loading categories...
-          </div>
-        )}
-
-        {!loading && systemStatus === 'offline' && (
-          <div>
+    <>
+      {/* ── Navbar ── */}
+      <nav className="navbar" role="banner">
+        <span className="navbar-brand">🎫 TokTickIT</span>
+        {requester && (
+          <div className="navbar-right">
             <div
-              className="alert alert-danger py-2 mb-3 text-center border-0"
-              role="alert"
-              style={{ backgroundColor: '#f8d7da', color: '#842029', borderRadius: '6px' }}
+              className="avatar"
+              style={{ background: avatarColor(requester.name), width: 32, height: 32, fontSize: 12 }}
+              aria-hidden="true"
             >
-              <div className="fw-bold small mb-0">System Error</div>
-              <div className="small">{error}</div>
+              {initials(requester.name)}
             </div>
-
-            <div className="d-flex justify-content-between align-items-center pt-2 text-start small">
-              <span className="fw-semibold text-dark">System Status:</span>
-              <span className="badge bg-danger px-3 py-1 fw-normal" style={{ borderRadius: '4px' }}>Offline</span>
-            </div>
+            <span className="navbar-user">{requester.name}</span>
+            <button
+              id="sign-out-btn"
+              className="btn btn-secondary btn-sm"
+              onClick={handleSignOut}
+              aria-label="Sign out"
+            >
+              Switch User
+            </button>
           </div>
         )}
+      </nav>
 
-        {!loading && systemStatus === 'online' && (
-          <div>
-            <div className="d-flex justify-content-between align-items-center py-2 text-start small">
-              <span className="fw-semibold text-dark">System Status:</span>
-              <span className="badge bg-success px-3 py-1 fw-normal" style={{ borderRadius: '4px' }}>Online</span>
-            </div>
-
-            <div className="text-center text-muted small my-2" style={{ fontSize: '0.8rem' }}>
-              Service: TokTickIT API
-            </div>
-
-            <div className="mt-4 text-center">
-              <h6 className="fw-bold mb-3 text-dark small">Supported Request Categories</h6>
-              <div className="border rounded-2 overflow-hidden text-start" aria-label="Category list">
-                {categories.map((cat, idx) => (
-                  <div
-                    key={cat.id}
-                    className={`d-flex justify-content-between align-items-center py-2 px-3 small ${
-                      idx !== categories.length - 1 ? 'border-bottom' : ''
-                    }`}
-                  >
-                    <span className="text-secondary fw-normal">{cat.name}</span>
-                    <span
-                      className="badge bg-dark rounded-pill px-2 py-1"
-                      style={{ fontSize: '0.7rem', minWidth: '24px' }}
-                    >
-                      {String(cat.id).padStart(2, '0')}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
+      {/* ── Pages ── */}
+      <main>
+        {route.name === 'select' && (
+          <RequesterSelector onSelect={handleSelectRequester} />
         )}
-      </div>
-    </div>
+
+        {route.name === 'my-tickets' && requester && (
+          <MyTickets
+            requesterId={requester.id}
+            onNewTicket={() => setRoute({ name: 'new-ticket' })}
+            onViewTicket={(id) => setRoute({ name: 'ticket-detail', id })}
+          />
+        )}
+
+        {route.name === 'new-ticket' && requester && (
+          <CreateTicket
+            requesterId={requester.id}
+            onSuccess={(id) => setRoute({ name: 'ticket-detail', id })}
+            onBack={() => setRoute({ name: 'my-tickets' })}
+          />
+        )}
+
+        {route.name === 'ticket-detail' && (
+          <TicketDetail
+            ticketId={(route as { name: 'ticket-detail'; id: number }).id}
+            onBack={() => setRoute({ name: 'my-tickets' })}
+          />
+        )}
+      </main>
+    </>
   );
 }
-
-export default App;
