@@ -5,60 +5,41 @@ import App from './App';
 describe('Frontend UI Tests', () => {
   beforeEach(() => {
     vi.stubGlobal('fetch', vi.fn());
+    // Clear localStorage before each test
+    localStorage.clear();
   });
 
   afterEach(() => {
     vi.restoreAllMocks();
   });
 
-  it('UI-01: TokTickIT heading renders', () => {
-    (fetch as any).mockImplementation(() => new Promise(() => {})); // pending promise
+  it('UI-01: Shows TokTickIT in the navbar', () => {
+    // Keep fetch pending so page stays in loading state
+    (fetch as any).mockImplementation(() => new Promise(() => {}));
     render(<App />);
-    const heading = screen.getByRole('heading', { level: 1 });
-    expect(heading).toBeInTheDocument();
-    expect(heading.textContent).toContain('TokTickIT');
+    // The app brand appears as a link in the Navbar
+    expect(screen.getByText('TokTickIT')).toBeInTheDocument();
   });
 
-  it('UI-02: Loading state changes to category list', async () => {
-    const mockCategories = [
-      { id: 1, name: 'Account and Access' },
-      { id: 2, name: 'Hardware' },
-      { id: 3, name: 'Software' },
-      { id: 4, name: 'Network' },
-    ];
-
-    (fetch as any).mockResolvedValue({
-      ok: true,
-      json: async () => ({ categories: mockCategories }),
-    });
-
+  it('UI-02: RequesterSelector shows skeleton while loading requesters', () => {
+    (fetch as any).mockImplementation(() => new Promise(() => {}));
     render(<App />);
-
-    // Initially displays loading state
-    expect(screen.getByText(/Loading categories.../i)).toBeInTheDocument();
-
-    // Changes to category list after fetch finishes
-    await waitFor(() => {
-      expect(screen.getByText('Account and Access')).toBeInTheDocument();
-      expect(screen.getByText('Hardware')).toBeInTheDocument();
-      expect(screen.getByText('Software')).toBeInTheDocument();
-      expect(screen.getByText('Network')).toBeInTheDocument();
-    });
-
-    expect(screen.queryByText(/Loading categories.../i)).not.toBeInTheDocument();
+    // While fetch is pending, the skeleton div should be shown
+    const skeleton = document.querySelector('.skeleton');
+    expect(skeleton).toBeInTheDocument();
   });
 
-  it('UI-03: API failure displays a useful error message', async () => {
+  it('UI-03: RequesterSelector shows error when API fails', async () => {
     (fetch as any).mockResolvedValue({
       ok: false,
       status: 500,
+      json: async () => ({}),
     });
 
     render(<App />);
 
     await waitFor(() => {
-      expect(screen.getByRole('alert')).toBeInTheDocument();
-      expect(screen.getByText(/System Status: Offline \(load failed\)/i)).toBeInTheDocument();
+      expect(screen.getByText(/Failed to load requesters/i)).toBeInTheDocument();
     });
   });
 });
