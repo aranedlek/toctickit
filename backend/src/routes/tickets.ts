@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import { PrismaClient, TicketStatus, Priority } from '../../generated/prisma/client';
+import { TicketStatus, Priority } from '../../generated/prisma/client';
+import { prisma } from '../prismaClient';
 import multer from 'multer';
 import path from 'path';
 
 const router = Router();
-const prisma = new PrismaClient();
 
 // GET /api/tickets
 router.get('/', async (req, res) => {

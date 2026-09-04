@@ -5,13 +5,12 @@ const { mockFindMany } = vi.hoisted(() => {
   return { mockFindMany: vi.fn() };
 });
 
-vi.mock('../generated/prisma/client', () => {
+vi.mock('./prismaClient', () => {
   return {
-    PrismaClient: class {
-      category = {
+    prisma: {
+      category: {
         findMany: mockFindMany,
-      };
-      $disconnect = vi.fn();
+      },
     },
   };
 });
@@ -43,9 +42,9 @@ describe('API-02: GET /api/categories', () => {
 
     const res = await request(app).get('/api/categories');
     expect(res.status).toBe(200);
-    expect(res.body.categories).toHaveLength(4);
+    expect(res.body).toHaveLength(4);
 
-    const names = res.body.categories.map((c: any) => c.name);
+    const names = res.body.map((c: any) => c.name);
     expect(names).toContain('Account and Access');
     expect(names).toContain('Hardware');
     expect(names).toContain('Software');
@@ -56,7 +55,7 @@ describe('API-02: GET /api/categories', () => {
     mockFindMany.mockRejectedValue(new Error('DB connection error'));
 
     const res = await request(app).get('/api/categories');
-    expect(res.status).toBe(200);
-    expect(res.body.categories).toHaveLength(4);
+    expect(res.status).toBe(500);
+    expect(res.body.error).toBe('Internal server error');
   });
 });

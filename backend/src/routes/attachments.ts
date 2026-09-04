@@ -1,8 +1,7 @@
 import { Router } from 'express';
-import { PrismaClient } from '../../generated/prisma/client';
+import { prisma } from '../prismaClient';
 
 const router = Router();
-const prisma = new PrismaClient();
 
 // DELETE /api/attachments/:id
 router.delete('/:id', async (req, res) => {

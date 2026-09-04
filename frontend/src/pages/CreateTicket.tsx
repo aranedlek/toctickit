@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { Requester, Category, RelatedSystem } from '../types';
+import { validateAttachment } from '../utils/validateAttachment';
 
 export default function CreateTicket() {
   const navigate = useNavigate();
@@ -42,12 +43,9 @@ export default function CreateTicket() {
       const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'];
       
       const validFiles = selectedFiles.filter(f => {
-        if (!allowedTypes.includes(f.type)) {
-          alert(`File type not allowed: ${f.name}`);
-          return false;
-        }
-        if (f.size > 5 * 1024 * 1024) {
-          alert(`File too large (max 5MB): ${f.name}`);
+        const result = validateAttachment({ type: f.type, size: f.size }, files.length);
+        if (!result.valid) {
+          alert(`File error (${f.name}): ${result.error}`);
           return false;
         }
         return true;
