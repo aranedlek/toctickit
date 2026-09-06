@@ -11,3 +11,6 @@ dist/
 # Editor
 .vscode/
 .DS_Store
+
+# Uploads
+/backend/uploads/
