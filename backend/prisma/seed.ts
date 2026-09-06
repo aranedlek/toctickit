@@ -1,16 +1,26 @@
-import { PrismaClient, TicketStatus, Priority } from '../generated/prisma/client';
+import { TicketStatus, Priority } from '../generated/prisma/client';
+import { prisma } from '../src/prismaClient';
 
-const prisma = new PrismaClient();
 
 async function main() {
   console.log('Start seeding...');
 
   // 1. Seed Requesters
   const requesters = [
+    { name: 'Aran Edlek', email: 'aran@example.com', isActive: true },
     { name: 'Anya Suphan', email: 'anya@example.com', isActive: true },
     { name: 'Ben Rattana', email: 'ben@example.com', isActive: true },
     { name: 'Chanya Prom', email: 'chanya@example.com', isActive: true },
     { name: 'Dome Wiriya', email: 'dome@example.com', isActive: true },
+    { name: 'Fah Sai', email: 'fah@example.com', isActive: true },
+    { name: 'Golf Pongsathorn', email: 'golf@example.com', isActive: true },
+    { name: 'Ice Sirichat', email: 'ice@example.com', isActive: true },
+    { name: 'Jay Kittikorn', email: 'jay@example.com', isActive: true },
+    { name: 'Kanya Meechai', email: 'kanya@example.com', isActive: true },
+    { name: 'Luk Nattapon', email: 'luk@example.com', isActive: true },
+    { name: 'Mint Thanawan', email: 'mint@example.com', isActive: true },
+    { name: 'Noon Siriya', email: 'noon@example.com', isActive: true },
+    { name: 'Orm Pakpoom', email: 'orm@example.com', isActive: true },
     { name: 'Eve Inactive', email: 'eve@example.com', isActive: false },
   ];
 

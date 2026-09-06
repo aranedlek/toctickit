@@ -1,5 +1,13 @@
 import { PrismaClient } from '../generated/prisma/client';
+import { PrismaPg } from '@prisma/adapter-pg';
 
-const url = process.env.DATABASE_URL || 'prisma+postgres://localhost:51213/?api_key=eyJkYXRhYmFzZVVybCI6InBvc3RncmVzOi8vcG9zdGdyZXM6cG9zdGdyZXNAbG9jYWxob3N0OjUxMjE0L3RlbXBsYXRlMT9zc2xtb2RlPWRpc2FibGUmY29ubmVjdGlvbl9saW1pdD0xMCZjb25uZWN0X3RpbWVvdXQ9MCZtYXhfaWRsZV9jb25uZWN0aW9uX2xpZmV0aW1lPTAmcG9vbF90aW1lb3V0PTAmc29ja2V0X3RpbWVvdXQ9MCIsIm5hbWUiOiJkZWZhdWx0Iiwic2hhZG93RGF0YWJhc2VVcmwiOiJwb3N0Z3JlczovL3Bvc3RncmVzOnBvc3RncmVzQGxvY2FsaG9zdDo1MTIxNS90ZW1wbGF0ZTE_c3NsbW9kZT1kaXNhYmxlJmNvbm5lY3Rpb25fbGltaXQ9MTAmY29ubmVjdF90aW1lb3V0PTAmbWF4X2lkbGVfY29ubmVjdGlvbl9saWZldGltZT0wJnBvb2xfdGltZW91dD0wJnNvY2tldF90aW1lb3V0PTAifQ';
+// Use the direct TCP connection string from prisma dev
+// Remove problematic timeout params; set reasonable pool limits
+const connectionString = process.env.DATABASE_DIRECT_URL ||
+  'postgres://postgres:postgres@localhost:51214/template1?sslmode=disable';
 
-export const prisma = new PrismaClient({ accelerateUrl: url });
+const adapter = new PrismaPg({
+  connectionString,
+  max: 5,
+});
+export const prisma = new PrismaClient({ adapter });

@@ -11,6 +11,7 @@ router.get('/', async (req, res) => {
     });
     res.json(requesters);
   } catch (error) {
+    console.error('Requesters error:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });

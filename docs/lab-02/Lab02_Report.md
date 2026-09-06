@@ -1,11 +1,58 @@
-# AI Use Log - Lab 02
+# Lab 02: Software Product Increment in Lab 2
+**TokTickIT Service Desk**
 
-This document records the usage of AI (Antigravity/Gemini) during the development of Lab 02.
+---
 
-## Summary of AI Assistance
+## 1. Answers to Lab Questions (Part 1-9)
+*(คุณสามารถนำคำตอบจากไฟล์ answers.md มาเติมลงในส่วนนี้ได้เลยครับ)*
+
+**Part 1:** ...
+**Part 2:** ...
+**Part 3:** ...
+*(เติมให้ครบถึง Part 9)*
+
+---
+
+## 2. Web Application UI Screenshots
+*(นำรูปที่คุณแคปไว้มาใส่แทนข้อความด้านล่างนี้เลยครับ)*
+
+### 2.1 Requester Selection Screen
+![Requester Selection Screen](./screenshots/requester-selection.png)
+*(แทรกรูปหน้า `localhost:5173/` ที่นี่)*
+
+### 2.2 My Tickets Screen
+![My Tickets Screen](./screenshots/my-tickets.png)
+*(แทรกรูปหน้า `localhost:5173/my-tickets` แบบตารางที่นี่)*
+
+### 2.3 Create Ticket Form
+![Create Ticket Screen](./screenshots/create-ticket.png)
+*(แทรกรูปหน้า `localhost:5173/tickets/new` ที่นี่)*
+
+### 2.4 Ticket Detail Screen
+![Ticket Detail Screen](./screenshots/ticket-detail.png)
+*(แทรกรูปหน้า รายละเอียดตั๋ว ที่นี่)*
+
+### 2.5 Attachment Removal
+![Attachment Removal](./screenshots/attachment-removal.png)
+*(แทรกรูประหว่างลบไฟล์แนบ ที่นี่)*
+
+---
+
+## 3. GitHub Workflow Evidence (Closed Issues & PRs)
+
+### 3.1 Closed Pull Requests
+*(ภาพยืนยันการ Merge Code ลงใน Repository เรียบร้อยแล้ว)*
+![Closed PRs](./screenshots/github_prs.png)
+
+### 3.2 Closed Issues
+*(ภาพยืนยันการทำ Issue 9, 10, 11, 12 ตามใบสั่งงานของอาจารย์)*
+![Closed Issues](./screenshots/github_issues.png)
+
+---
+
+## 4. AI Use Log
+
 The AI was instrumental in completing this sprint. It helped troubleshoot database connection errors (Prisma TCP vs HTTP issues), wrote unit tests using Vitest, implemented the REST API with Supertest validation, and refactored the UI to match the Zen Green table specification perfectly.
-
-## Prompt Log
 
 | # | Prompt (User Input) | AI Action / Result |
 |---|----------------------|---------------------|
