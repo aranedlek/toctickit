@@ -71,6 +71,7 @@ export default function Navbar() {
           {isStaff ? (
             <>
               <Link to="/staff/tickets" style={{ color: location.pathname === '/staff/tickets' ? '#111' : '#555', fontSize: '14px', fontWeight: 600, textDecoration: 'none' }}>Ticket Queue</Link>
+              <Link to="/staff/settings" style={{ color: location.pathname === '/staff/settings' ? '#111' : '#555', fontSize: '14px', fontWeight: 600, textDecoration: 'none' }}>Settings</Link>
               {user.role === 'ADMINISTRATOR' && (
                 <Link to="/admin/users" style={{ color: location.pathname === '/admin/users' ? '#111' : '#555', fontSize: '14px', fontWeight: 600, textDecoration: 'none' }}>User Management</Link>
               )}
