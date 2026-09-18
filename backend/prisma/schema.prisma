@@ -12,14 +12,26 @@ datasource db {
   provider = "postgresql"
 }
 
-model Requester {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String   @unique
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
+enum Role {
+  REQUESTER
+  IT_STAFF
+  ADMINISTRATOR
+}
 
-  tickets   Ticket[]
+model User {
+  id                     Int      @id @default(autoincrement())
+  name                   String
+  email                  String   @unique
+  passwordHash           String
+  role                   Role
+  isActive               Boolean  @default(true)
+  requiresPasswordChange Boolean  @default(true)
+  createdAt              DateTime @default(now())
+
+  tickets                Ticket[] @relation("TicketRequester")
+  ownedTickets           Ticket[] @relation("TicketOwner")
+  publicComments         PublicComment[]
+  internalNotes          InternalNote[]
 }
 
 model Category {
@@ -43,19 +55,24 @@ model Ticket {
   number          String        @unique @default(uuid())
   title           String
   description     String
-  status          TicketStatus  @default(OPEN)
+  status          TicketStatus  @default(NEW)
   priority        Priority      @default(MEDIUM)
+  itPriority      Priority?
   requesterId     Int
+  ticketOwnerId   Int?
   categoryId      Int
   relatedSystemId Int?
 
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
 
-  requester       Requester      @relation(fields: [requesterId], references: [id])
+  requester       User           @relation("TicketRequester", fields: [requesterId], references: [id])
+  ticketOwner     User?          @relation("TicketOwner", fields: [ticketOwnerId], references: [id])
   category        Category       @relation(fields: [categoryId], references: [id])
   relatedSystem   RelatedSystem? @relation(fields: [relatedSystemId], references: [id])
   attachments     Attachment[]
+  publicComments  PublicComment[]
+  internalNotes   InternalNote[]
 }
 
 model Attachment {
@@ -72,11 +89,37 @@ model Attachment {
   ticket      Ticket    @relation(fields: [ticketId], references: [id])
 }
 
+model PublicComment {
+  id        Int      @id @default(autoincrement())
+  content   String
+  ticketId  Int
+  authorId  Int
+  createdAt DateTime @default(now())
+
+  ticket    Ticket   @relation(fields: [ticketId], references: [id])
+  author    User     @relation(fields: [authorId], references: [id])
+}
+
+model InternalNote {
+  id        Int      @id @default(autoincrement())
+  content   String
+  ticketId  Int
+  authorId  Int
+  createdAt DateTime @default(now())
+
+  ticket    Ticket   @relation(fields: [ticketId], references: [id])
+  author    User     @relation(fields: [authorId], references: [id])
+}
+
 enum TicketStatus {
+  NEW
   OPEN
   IN_PROGRESS
+  WAITING_FOR_REQUESTER
   RESOLVED
   CLOSED
+  REOPENED
+  CANCELLED
 }
 
 enum Priority {

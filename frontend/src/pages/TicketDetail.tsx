@@ -13,6 +13,8 @@ export default function TicketDetail() {
   
   // State for tracking which attachment is being deleted
   const [deletingId, setDeletingId] = useState<number | null>(null);
+  // Store delete reasons locally
+  const [deleteReasons, setDeleteReasons] = useState<Record<number, string>>({});
 
   useEffect(() => {
     fetch(`http://localhost:3000/api/tickets/${id}`)
@@ -31,7 +33,8 @@ export default function TicketDetail() {
   }, [id]);
 
   const handleRemoveAttachment = async (attachmentId: number) => {
-    if (!confirm('Are you sure you want to remove this attachment?')) return;
+    const reason = prompt('Please provide a reason for removing this attachment:');
+    if (!reason) return; // User cancelled or left it blank
     
     setDeletingId(attachmentId);
     try {
@@ -40,7 +43,8 @@ export default function TicketDetail() {
       });
       if (!res.ok) throw new Error('Failed to delete attachment');
       
-      // Update local state to reflect deletion
+      // Update local state to reflect deletion and store the reason
+      setDeleteReasons(prev => ({ ...prev, [attachmentId]: reason }));
       setTicket(prev => {
         if (!prev) return prev;
         return {
@@ -99,7 +103,7 @@ export default function TicketDetail() {
 
         <div style={{ borderTop: '1px solid var(--color-border)', marginTop: '24px', paddingTop: '24px' }}>
           <div style={{ fontSize: '12px', color: 'var(--color-text-secondary)', marginBottom: '16px', fontWeight: 600 }}>
-            Attachments ({ticket.attachments?.filter(a => !a.deletedAt).length || 0})
+            Attachments ({ticket.attachments?.length || 0})
           </div>
           
           {(!ticket.attachments || ticket.attachments.length === 0) ? (
@@ -112,6 +116,7 @@ export default function TicketDetail() {
                   attachment={att} 
                   onRemove={handleRemoveAttachment}
                   isRemoving={deletingId === att.id}
+                  deleteReason={deleteReasons[att.id]}
                 />
               ))}
             </div>

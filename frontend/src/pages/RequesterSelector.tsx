@@ -8,7 +8,7 @@ export default function RequesterSelector() {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    fetch('http://localhost:3000/api/requesters')
+    fetch('/api/requesters')
       .then((res) => {
         if (!res.ok) throw new Error('Failed to load requesters');
         return res.json();
@@ -31,98 +31,107 @@ export default function RequesterSelector() {
     window.location.href = '/my-tickets';
   };
 
+  const handleCancel = () => {
+    setSelectedId('');
+  };
+
   return (
-    <div style={{
-      minHeight: '100vh',
-      backgroundColor: '#f0f2f5',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      padding: '16px',
-      fontFamily: "'Inter', sans-serif"
-    }}>
+    <div style={{ padding: '0 0 24px 0', fontFamily: "'Inter', sans-serif", width: '100%' }}>
+      {/* Header section with Title and State View */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '40px', flexWrap: 'wrap', gap: '16px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#2e7d32', fontWeight: 600, fontSize: '14px' }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+          </svg>
+          <span>Development Requester Selection</span>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '11px', fontWeight: 600 }}>
+          <span style={{ color: '#888' }}>State View:</span>
+          <span style={{ backgroundColor: '#e8f5e9', color: '#2e7d32', padding: '4px 10px', borderRadius: '16px', border: '1px solid #c8e6c9', cursor: 'pointer' }}>Active Users</span>
+          <span style={{ backgroundColor: '#fff8e1', color: '#f57f17', padding: '4px 10px', borderRadius: '16px', border: '1px solid #ffecb3', cursor: 'pointer' }}>Loading State</span>
+          <span style={{ backgroundColor: '#ffebee', color: '#c62828', padding: '4px 10px', borderRadius: '16px', border: '1px solid #ffcdd2', cursor: 'pointer' }}>Error State</span>
+        </div>
+      </div>
+
       {/* Main Card */}
       <div style={{
         backgroundColor: '#fff',
         borderRadius: '12px',
-        boxShadow: '0 2px 16px rgba(0,0,0,0.1)',
-        padding: '40px 36px',
+        boxShadow: '0 2px 24px rgba(0,0,0,0.06)',
+        border: '1px solid #eaeaea',
+        padding: '40px',
         width: '100%',
-        maxWidth: '420px',
-        textAlign: 'center',
+        maxWidth: '560px',
+        margin: '0 auto',
       }}>
-        {/* Logo */}
+        {/* Icon */}
         <div style={{
-          width: '60px',
-          height: '60px',
-          backgroundColor: '#e53935',
-          borderRadius: '12px',
+          width: '56px',
+          height: '56px',
+          backgroundColor: '#e8f5e9',
+          borderRadius: '50%',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          margin: '0 auto 20px auto',
-          fontSize: '22px',
-          fontWeight: 800,
-          color: 'white',
-          letterSpacing: '-1px'
+          margin: '0 auto 24px auto',
+          color: '#2e7d32'
         }}>
-          TT
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
         </div>
 
         {/* Title */}
         <h1 style={{
-          fontSize: '22px',
+          fontSize: '20px',
           fontWeight: 700,
-          color: '#2e7d32',
-          margin: '0 0 4px 0'
+          color: '#111',
+          margin: '0 0 8px 0',
+          textAlign: 'center'
         }}>
-          TokTickIT Service Desk
+          Select Development Requester
         </h1>
         <p style={{
           fontSize: '13px',
-          color: '#888',
-          margin: '0 0 24px 0'
+          color: '#666',
+          margin: '0 0 32px 0',
+          textAlign: 'center',
+          lineHeight: '1.5'
         }}>
-          Lab 2 Testing Environment
+          Choose a development requester to simulate the current requester context for Lab 2. This is for testing only and is not a login screen.
         </p>
 
-        {/* Info Box */}
-        <div style={{
-          backgroundColor: '#e8f5e9',
-          border: '1px solid #a5d6a7',
-          borderRadius: '8px',
-          padding: '12px 16px',
-          textAlign: 'left',
-          marginBottom: '24px',
-          display: 'flex',
-          gap: '10px',
-          alignItems: 'flex-start'
-        }}>
-          <span style={{ fontSize: '16px', marginTop: '1px' }}>ℹ️</span>
-          <div>
-            <div style={{ fontSize: '13px', fontWeight: 600, color: '#2e7d32', marginBottom: '4px' }}>
-              Development Requester Selection
-            </div>
-            <div style={{ fontSize: '12px', color: '#388e3c', lineHeight: '1.5' }}>
-              Select a Development Requester to test requester-specific ticket behaviour. This is not a login screen. Authentication and role-based access will be introduced in Lab 3.
-            </div>
-          </div>
-        </div>
-
-        {/* Dropdown */}
-        <div style={{ textAlign: 'left', marginBottom: '16px' }}>
+        {/* Dropdown Section */}
+        <div style={{ marginBottom: '16px' }}>
           <label style={{
             display: 'block',
-            fontSize: '13px',
+            fontSize: '12px',
             fontWeight: 600,
             color: '#333',
-            marginBottom: '6px'
+            marginBottom: '8px'
           }}>
-            Select Active Development Requester *
+            Development Requester <span style={{color: 'red'}}>*</span>
           </label>
+          
           {loading ? (
-            <div style={{ height: '40px', backgroundColor: '#f5f5f5', borderRadius: '8px' }} />
+            <div style={{ 
+              height: '42px', 
+              borderRadius: '8px', 
+              border: '1px solid #eaeaea', 
+              backgroundColor: '#fafafa',
+              display: 'flex',
+              alignItems: 'center',
+              padding: '0 14px',
+              gap: '10px'
+            }}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#888" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ animation: 'spin 1s linear infinite' }}>
+                <line x1="12" y1="2" x2="12" y2="6"></line><line x1="12" y1="18" x2="12" y2="22"></line><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line><line x1="2" y1="12" x2="6" y2="12"></line><line x1="18" y1="12" x2="22" y2="12"></line><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line><line x1="16.24" y1="4.93" x2="19.07" y2="7.76"></line>
+              </svg>
+              <style>{`@keyframes spin { 100% { transform: rotate(360deg); } }`}</style>
+              <span style={{ fontSize: '13px', color: '#666' }}>Loading active development requesters from PostgreSQL...</span>
+            </div>
           ) : error ? (
             <div style={{ color: 'red', fontSize: '13px' }}>{error}</div>
           ) : (
@@ -135,75 +144,100 @@ export default function RequesterSelector() {
                 border: '1px solid #d0d0d0',
                 borderRadius: '8px',
                 fontSize: '14px',
-                color: selectedId ? '#111' : '#888',
+                color: selectedId ? '#111' : '#666',
                 backgroundColor: '#fff',
                 appearance: 'auto',
                 cursor: 'pointer',
               }}
             >
-              <option value="">-- Choose a Development Requester --</option>
+              <option value="" disabled>-- Choose a Development Requester --</option>
               {requesters.map((r) => (
-                <option key={r.id} value={r.id}>{r.name}</option>
+                <option key={r.id} value={r.id}>{r.name} - HR ({r.email})</option>
               ))}
             </select>
           )}
         </div>
 
-        {/* Continue Button */}
-        <button
-          onClick={handleContinue}
-          disabled={!selectedId}
-          style={{
-            width: '100%',
-            padding: '12px',
-            backgroundColor: selectedId ? '#fff' : '#fff',
-            color: selectedId ? '#2e7d32' : '#aaa',
-            border: `1px solid ${selectedId ? '#2e7d32' : '#d0d0d0'}`,
-            borderRadius: '8px',
-            fontSize: '14px',
-            fontWeight: 600,
-            cursor: selectedId ? 'pointer' : 'not-allowed',
-            transition: 'all 0.2s',
-          }}
-          onMouseEnter={(e) => {
-            if (selectedId) e.currentTarget.style.backgroundColor = '#e8f5e9';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = '#fff';
-          }}
-        >
-          Continue to Application →
-        </button>
-      </div>
-
-      {/* Footer */}
-      <div style={{
-        marginTop: '32px',
-        width: '100%',
-        maxWidth: '560px',
-        backgroundColor: '#fff',
-        borderRadius: '8px',
-        padding: '16px 24px',
-        textAlign: 'center',
-        boxShadow: '0 1px 4px rgba(0,0,0,0.06)'
-      }}>
-        <div style={{ fontSize: '13px', fontWeight: 600, color: '#555', marginBottom: '8px' }}>
-          TokTickIT IT Service Desk
-        </div>
+        {/* Alerts */}
         <div style={{
-          height: '6px',
-          backgroundColor: '#e0e0e0',
-          borderRadius: '4px',
-          overflow: 'hidden'
+          backgroundColor: '#e8f5e9',
+          borderRadius: '8px',
+          padding: '12px 16px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px',
+          marginBottom: '16px'
         }}>
-          <div style={{
-            height: '100%',
-            width: '70%',
-            backgroundColor: '#a5d6a7',
-            borderRadius: '4px'
-          }} />
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2e7d32" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          <span style={{ fontSize: '12px', color: '#2e7d32', fontWeight: 500 }}>
+            Only active development requesters are shown.
+          </span>
         </div>
-        <div style={{ fontSize: '11px', color: '#aaa', marginTop: '6px' }}>Check System</div>
+
+        <div style={{
+          backgroundColor: '#f5f5f5',
+          borderRadius: '8px',
+          padding: '16px',
+          display: 'flex',
+          alignItems: 'flex-start',
+          gap: '12px',
+          marginBottom: '32px'
+        }}>
+          <div style={{marginTop: '2px', color: '#666'}}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+          </div>
+          <div>
+            <div style={{ fontSize: '13px', fontWeight: 600, color: '#333', marginBottom: '4px' }}>
+              Authentication coming in Lab 3
+            </div>
+            <div style={{ fontSize: '12px', color: '#666', lineHeight: '1.5' }}>
+              In Lab 3, this selection will be replaced with secure authentication so you can access the system with your own account.
+            </div>
+          </div>
+        </div>
+
+        {/* Actions */}
+        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
+          <button
+            onClick={handleCancel}
+            style={{
+              padding: '8px 20px',
+              backgroundColor: '#fff',
+              color: '#333',
+              border: '1px solid #e0e0e0',
+              borderRadius: '24px',
+              fontSize: '13px',
+              fontWeight: 600,
+              cursor: 'pointer',
+            }}
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleContinue}
+            disabled={!selectedId}
+            style={{
+              padding: '8px 24px',
+              backgroundColor: selectedId ? '#2e7d32' : '#a5d6a7',
+              color: '#fff',
+              border: 'none',
+              borderRadius: '24px',
+              fontSize: '13px',
+              fontWeight: 600,
+              cursor: selectedId ? 'pointer' : 'not-allowed',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px'
+            }}
+          >
+            <span style={{ fontSize: '14px', lineHeight: 1 }}>→</span> Continue
+          </button>
+        </div>
       </div>
     </div>
   );
