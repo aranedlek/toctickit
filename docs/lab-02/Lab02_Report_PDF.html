@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>Lab 02 Report - Aran Edlek 67070505230</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+  
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  body {
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    font-size: 11pt;
+    color: #1a1a1a;
+    line-height: 1.6;
+    background: #fff;
+  }
+
+  @media print {
+    .page-break { page-break-before: always; }
+    .no-print { display: none; }
+    body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+
+  .page {
+    max-width: 210mm;
+    margin: 0 auto;
+    padding: 15mm 18mm;
+  }
+
+  /* ===== COVER PAGE ===== */
+  .cover-title {
+    text-align: center;
+    margin-top: 20px;
+  }
+  .cover-title h1 {
+    font-size: 28pt;
+    color: #2D6A4F;
+    font-weight: 800;
+    font-style: italic;
+    margin-bottom: 4px;
+  }
+  .cover-title h2 {
+    font-size: 14pt;
+    color: #1B4332;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .cover-title h3 {
+    font-size: 11pt;
+    color: #4A6057;
+    font-weight: 400;
+    font-style: italic;
+    margin-bottom: 24px;
+  }
+
+  /* Info Table (green header) */
+  .info-table {
+    width: 85%;
+    margin: 0 auto 30px auto;
+    border-collapse: collapse;
+    font-size: 10.5pt;
+  }
+  .info-table th {
+    background: #2D6A4F;
+    color: #fff;
+    font-weight: 700;
+    padding: 8px 14px;
+    text-align: left;
+    border: 1px solid #2D6A4F;
+  }
+  .info-table td {
+    padding: 6px 14px;
+    border: 1px solid #ccc;
+    vertical-align: top;
+  }
+  .info-table td:first-child {
+    font-weight: 600;
+    width: 180px;
+    background: #f9f9f9;
+  }
+
+  /* Screenshot placeholder */
+  .screenshot-placeholder {
+    border: 2px dashed #B7E4C7;
+    border-radius: 8px;
+    background: #F0FAF4;
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 14px 0 20px 0;
+    padding: 20px;
+    text-align: center;
+    color: #4A6057;
+    font-size: 10pt;
+    font-style: italic;
+  }
+  .screenshot-placeholder.small { min-height: 200px; }
+  .screenshot-placeholder.large { min-height: 400px; }
+  .screenshot-caption {
+    text-align: center;
+    font-size: 9.5pt;
+    font-style: italic;
+    color: #666;
+    margin: -12px 0 20px 0;
+  }
+
+  /* Section headers */
+  .part-title {
+    font-size: 18pt;
+    color: #2D6A4F;
+    font-weight: 700;
+    margin: 30px 0 6px 0;
+    padding-bottom: 6px;
+    border-bottom: 3px solid #2D6A4F;
+  }
+  .part-subtitle {
+    font-size: 10pt;
+    color: #888;
+    font-style: italic;
+    margin-bottom: 16px;
+  }
+  h3 { font-size: 12pt; color: #1B4332; margin: 18px 0 8px 0; font-weight: 700; }
+  h4 { font-size: 11pt; color: #2D6A4F; margin: 14px 0 6px 0; }
+
+  /* Generic tables */
+  table.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0 18px 0;
+    font-size: 10pt;
+  }
+  table.data-table th {
+    background: #2D6A4F;
+    color: #fff;
+    font-weight: 600;
+    padding: 8px 12px;
+    text-align: left;
+    border: 1px solid #2D6A4F;
+  }
+  table.data-table td {
+    padding: 6px 12px;
+    border: 1px solid #ddd;
+    vertical-align: top;
+  }
+  table.data-table tr:nth-child(even) { background: #f9fdfb; }
+
+  /* Guidance box */
+  .guidance {
+    background: #FFF8E1;
+    border-left: 4px solid #F9A825;
+    padding: 10px 14px;
+    margin: 10px 0 16px 0;
+    font-size: 9.5pt;
+    font-style: italic;
+    color: #5D4037;
+  }
+
+  ul, ol { margin: 6px 0 12px 24px; }
+  li { margin-bottom: 4px; }
+  p { margin: 6px 0 10px 0; }
+  code { background: #f0f0f0; padding: 1px 5px; border-radius: 3px; font-size: 9.5pt; }
+  hr { border: none; border-top: 1px solid #B7E4C7; margin: 20px 0; }
+  .badge { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 9pt; font-weight: 600; }
+  .badge-pass { background: #D8F3DC; color: #1B4332; }
+
+  .print-instruction {
+    background: #E3F2FD;
+    border: 1px solid #90CAF9;
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin: 10px 0 20px 0;
+    font-size: 10pt;
+    color: #1565C0;
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- ===== PRINT INSTRUCTION ===== -->
+  <div class="print-instruction no-print">
+    📌 <strong>วิธีใช้:</strong><br>
+    1) แคปรูปหน้าจอตามที่ระบุในแต่ละช่องสีเขียว<br>
+    2) ใส่รูปในช่อง โดยเปลี่ยนข้อความเป็น <code>&lt;img src="ชื่อไฟล์.png" style="width:100%"&gt;</code><br>
+    3) เปิดไฟล์นี้ในเบราว์เซอร์ → กด <strong>Ctrl+P</strong> → Save as PDF
+  </div>
+
+  <!-- ========================================== -->
+  <!--              COVER PAGE                     -->
+  <!-- ========================================== -->
+  <div class="cover-title">
+    <h1>TokTickIT — Lab 2 Submission</h1>
+    <h2>Requester Ticketing MVP with UI Foundation</h2>
+    <h3>Course: CPE 334 Software Engineering — KMUTT</h3>
+  </div>
+
+  <table class="info-table">
+    <tr>
+      <th>Item</th>
+      <th>Student &amp; Project Information</th>
+    </tr>
+    <tr><td>Name</td><td>Aran Edlek</td></tr>
+    <tr><td>Student ID</td><td>67070505230</td></tr>
+    <tr><td>GitHub</td><td>@aranedlek</td></tr>
+    <tr><td>Repository</td><td>github.com/aranedlek/toctickit</td></tr>
+    <tr><td>Final Release PR</td><td>https://github.com/aranedlek/toctickit (merge lab2-staging → main)</td></tr>
+    <tr><td>Peer Reviewer</td><td>Jinjutha Nannarumit (@Ponatinylibug), 67070505210</td></tr>
+    <tr><td>Primary Requester (A)</td><td>Aran Edlek (aran@example.com)</td></tr>
+    <tr><td>Secondary Requester (B)</td><td>Anya Suphan (anya@example.com)</td></tr>
+  </table>
+
+  <!-- Repo overview screenshot -->
+  <div class="screenshot-placeholder large">
+    📸 แคปหน้า GitHub Repository Overview<br>
+    https://github.com/aranedlek/toctickit<br><br>
+    (แสดง file tree ทั้งหมดของ main branch — มี backend/, frontend/, docs/lab-02/)
+  </div>
+  <div class="screenshot-caption">GitHub Repository Overview: aranedlek/toctickit (Public)</div>
+
+  <!-- ========================================== -->
+  <!--         PART 1: Git Workflow (10 pts)       -->
+  <!-- ========================================== -->
+  <div class="page-break"></div>
+  <h2 class="part-title">Answer Part 1 — Git Use with Engineering Workflow (10 pts)</h2>
+  <div class="guidance">
+    <strong>Guidance:</strong> Everything here must be captured from the actual GitHub repository — commit graph, Project board, and PR thread.
+  </div>
+
+  <h3>1.1 Commit Graph / Branch History</h3>
+  <p>แสดง commit history ที่แสดงการ merge feature branches → lab2-staging → main</p>
+  <div class="screenshot-placeholder">
+    📸 แคปหน้า commit history หรือ Insights → Network<br>
+    https://github.com/aranedlek/toctickit/network<br><br>
+    (แสดง branch graph: feature/lab2-backend, feature/lab2-frontend, feature/lab2-tests → lab2-staging → main)
+  </div>
+
+  <h3>1.2 Closed Pull Requests</h3>
+  <table class="data-table">
+    <tr><th>PR</th><th>Branch</th><th>Description</th><th>Status</th></tr>
+    <tr><td>#15</td><td>feature/lab2-backend</td><td>feat(backend): Prisma models, API routes, seed data</td><td><span class="badge badge-pass">Merged ✓</span></td></tr>
+    <tr><td>#16</td><td>feature/lab2-frontend</td><td>feat(frontend): Zen Green UI implementation</td><td><span class="badge badge-pass">Merged ✓</span></td></tr>
+    <tr><td>#17</td><td>feature/lab2-tests</td><td>test: automated unit and API tests</td><td><span class="badge badge-pass">Merged ✓</span></td></tr>
+  </table>
+  <div class="screenshot-placeholder">
+    📸 แคปหน้า Closed Pull Requests<br>
+    https://github.com/aranedlek/toctickit/pulls?q=is%3Apr+is%3Aclosed
+  </div>
+
+  <h3>1.3 Closed Issues</h3>
+  <table class="data-table">
+    <tr><th>Issue</th><th>Title</th><th>Status</th></tr>
+    <tr><td>#9</td><td>Database Schema &amp; Seed Data</td><td><span class="badge badge-pass">Closed ✓</span></td></tr>
+    <tr><td>#10</td><td>REST API Implementation</td><td><span class="badge badge-pass">Closed ✓</span></td></tr>
+    <tr><td>#11</td><td>Frontend UI (Requester Selection, My Tickets, Create Ticket, Detail)</td><td><span class="badge badge-pass">Closed ✓</span></td></tr>
+    <tr><td>#12</td><td>Automated Tests (Unit + API)</td><td><span class="badge badge-pass">Closed ✓</span></td></tr>
+  </table>
+  <div class="screenshot-placeholder">
+    📸 แคปหน้า Closed Issues<br>
+    https://github.com/aranedlek/toctickit/issues?q=is%3Aissue+is%3Aclosed
+  </div>
+
+  <h3>1.4 Peer Review Evidence (reviewer.md)</h3>
+  <table class="data-table">
+    <tr><th>PR</th><th>Branch</th><th>Reviewer Verdict</th></tr>
+    <tr><td><a href="https://github.com/aranedlek/toctickit/pull/5">#5</a></td><td>feature/1-project-foundation</td><td>Approved ✓</td></tr>
+    <tr><td><a href="https://github.com/aranedlek/toctickit/pull/6">#6</a></td><td>feature/2-api-endpoint</td><td>Approved ✓</td></tr>
+    <tr><td><a href="https://github.com/aranedlek/toctickit/pull/7">#7</a></td><td>feature/3-category-seed</td><td>Approved ✓</td></tr>
+    <tr><td><a href="https://github.com/aranedlek/toctickit/pull/8">#8</a></td><td>feature/4-categories-api</td><td>Approved ✓</td></tr>
+  </table>
+
+  <!-- ========================================== -->
+  <!--         PART 2: Spec DD (10 pts)            -->
+  <!-- ========================================== -->
+  <div class="page-break"></div>
+  <h2 class="part-title">Answer Part 2 — Specification DD (10 pts)</h2>
+  <div class="guidance">
+    <strong>Guidance:</strong> Show that specification.md existed BEFORE the main implementation PRs were completed.
+  </div>
+
+  <h3>2.1 Sprint Goal</h3>
+  <p>Deliver a working <strong>Requester MVP</strong> for the TokTickIT ticketing system — requester can select identity, submit tickets with attachments, browse/filter own tickets, and view ticket details through a Zen-Green themed responsive UI.</p>
+
+  <h3>2.2 Data Models</h3>
+  <table class="data-table">
+    <tr><th>Model</th><th>Key Fields</th><th>Relations</th></tr>
+    <tr><td>Requester</td><td>id, name, email, isActive</td><td>→ Ticket[]</td></tr>
+    <tr><td>Category</td><td>id, name</td><td>→ Ticket[]</td></tr>
+    <tr><td>RelatedSystem</td><td>id, name</td><td>→ Ticket[]</td></tr>
+    <tr><td>Ticket</td><td>id, title, description, status, priority, requesterId, categoryId</td><td>→ Requester, Category, RelatedSystem?, Attachment[]</td></tr>
+    <tr><td>Attachment</td><td>id, filename, mimeType, sizeBytes, deletedAt</td><td>→ Ticket</td></tr>
+  </table>
+
+  <h3>2.3 Business Rules</h3>
+  <table class="data-table">
+    <tr><th>#</th><th>Rule</th></tr>
+    <tr><td>BR-01</td><td>Only <strong>active</strong> Requesters (isActive = true) appear on selection screen</td></tr>
+    <tr><td>BR-02</td><td>Ticket must have <strong>Title</strong>, <strong>Description</strong>, and <strong>Category</strong></td></tr>
+    <tr><td>BR-03</td><td>Attachments: JPG, PNG, WEBP, PDF only</td></tr>
+    <tr><td>BR-04</td><td>Each attachment ≤ <strong>5 MB</strong></td></tr>
+    <tr><td>BR-05</td><td>Max <strong>5 attachments</strong> per ticket (non-deleted)</td></tr>
+    <tr><td>BR-06</td><td>Attachment deletion is <strong>soft-delete</strong> (set deletedAt)</td></tr>
+    <tr><td>BR-07</td><td>Requester sees only <strong>their own</strong> tickets</td></tr>
+    <tr><td>BR-08</td><td>Ticket Detail is <strong>read-only</strong></td></tr>
+    <tr><td>BR-09</td><td>New ticket defaults: status=OPEN, priority=MEDIUM</td></tr>
+  </table>
+
+  <h3>2.4 Seed Data — Requesters (14 Active + 1 Inactive)</h3>
+  <table class="data-table">
+    <tr><th>#</th><th>Name</th><th>Email</th><th>Active</th></tr>
+    <tr><td>1</td><td><strong>Aran Edlek</strong></td><td>aran@example.com</td><td>✅</td></tr>
+    <tr><td>2</td><td>Anya Suphan</td><td>anya@example.com</td><td>✅</td></tr>
+    <tr><td>3</td><td>Ben Rattana</td><td>ben@example.com</td><td>✅</td></tr>
+    <tr><td>4</td><td>Chanya Prom</td><td>chanya@example.com</td><td>✅</td></tr>
+    <tr><td>5</td><td>Dome Wiriya</td><td>dome@example.com</td><td>✅</td></tr>
+    <tr><td>6</td><td>Fah Sai</td><td>fah@example.com</td><td>✅</td></tr>
+    <tr><td>7</td><td>Golf Pongsathorn</td><td>golf@example.com</td><td>✅</td></tr>
+    <tr><td>8</td><td>Ice Sirichat</td><td>ice@example.com</td><td>✅</td></tr>
+    <tr><td>9</td><td>Jay Kittikorn</td><td>jay@example.com</td><td>✅</td></tr>
+    <tr><td>10</td><td>Kanya Meechai</td><td>kanya@example.com</td><td>✅</td></tr>
+    <tr><td>11</td><td>Luk Nattapon</td><td>luk@example.com</td><td>✅</td></tr>
+    <tr><td>12</td><td>Mint Thanawan</td><td>mint@example.com</td><td>✅</td></tr>
+    <tr><td>13</td><td>Noon Siriya</td><td>noon@example.com</td><td>✅</td></tr>
+    <tr><td>14</td><td>Orm Pakpoom</td><td>orm@example.com</td><td>✅</td></tr>
+    <tr><td>15</td><td>Eve Inactive</td><td>eve@example.com</td><td>❌</td></tr>
+  </table>
+
+  <!-- ========================================== -->
+  <!--         PART 3: Test DD (10 pts)            -->
+  <!-- ========================================== -->
+  <div class="page-break"></div>
+  <h2 class="part-title">Answer Part 3 — Test DD and Traceability (10 pts)</h2>
+  <div class="guidance">
+    <strong>Guidance:</strong> Show tests.md was written before or alongside implementation.
+  </div>
+
+  <h3>3.1 Unit Tests (Frontend — Vitest)</h3>
+  <table class="data-table">
+    <tr><th>Test ID</th><th>Description</th><th>Expected</th><th>Status</th></tr>
+    <tr><td>UT-01</td><td>Accept valid JPG (≤ 5MB)</td><td>valid: true</td><td><span class="badge badge-pass">✅ Pass</span></td></tr>
+    <tr><td>UT-02</td><td>Accept valid PNG (= 5MB)</td><td>valid: true</td><td><span class="badge badge-pass">✅ Pass</span></td></tr>
+    <tr><td>UT-03</td><td>Accept valid WEBP</td><td>valid: true</td><td><span class="badge badge-pass">✅ Pass</span></td></tr>
+    <tr><td>UT-04</td><td>Accept valid PDF</td><td>valid: true</td><td><span class="badge badge-pass">✅ Pass</span></td></tr>
+    <tr><td>UT-05</td><td>Reject unsupported type (text/plain)</td><td>valid: false</td><td><span class="badge badge-pass">✅ Pass</span></td></tr>
+    <tr><td>UT-06</td><td>Reject file > 5 MB</td><td>valid: false</td><td><span class="badge badge-pass">✅ Pass</span></td></tr>
+    <tr><td>UT-07</td><td>Reject 6th attachment</td><td>valid: false</td><td><span class="badge badge-pass">✅ Pass</span></td></tr>
+  </table>
+
+  <h3>3.2 API Tests (Backend — Vitest + Supertest)</h3>
+  <table class="data-table">
+    <tr><th>Test ID</th><th>Endpoint</th><th>Scenario</th><th>Expected</th><th>Status</th></tr>
+    <tr><td>API-01</td><td>GET /api/requesters</td><td>Returns active requesters</td><td>200</td><td><span class="badge badge-pass">✅ Pass</span></td></tr>
+    <tr><td>API-05</td><td>POST /api/tickets</td><td>Create valid ticket</td><td>201</td><td><span class="badge badge-pass">✅ Pass</span></td></tr>
+    <tr><td>API-06</td><td>POST /api/tickets</td><td>Missing title</td><td>400</td><td><span class="badge badge-pass">✅ Pass</span></td></tr>
+    <tr><td>API-07</td><td>POST /api/tickets</td><td>Missing description</td><td>400</td><td><span class="badge badge-pass">✅ Pass</span></td></tr>
+    <tr><td>API-08</td><td>POST /api/tickets</td><td>Missing categoryId</td><td>400</td><td><span class="badge badge-pass">✅ Pass</span></td></tr>
+    <tr><td>API-09</td><td>POST /api/tickets</td><td>Invalid requesterId</td><td>404</td><td><span class="badge badge-pass">✅ Pass</span></td></tr>
+  </table>
+
+  <h3>3.3 Test Output Evidence</h3>
+  <div class="screenshot-placeholder">
+    📸 แคปหน้า terminal ที่รัน <code>npm test</code> ทั้ง backend + frontend<br><br>
+    (แสดง All tests passed ✓)
+  </div>
+
+  <!-- ========================================== -->
+  <!--         PART 4: AI Use (10 pts)             -->
+  <!-- ========================================== -->
+  <div class="page-break"></div>
+  <h2 class="part-title">Answer Part 4 — AI Use with Reflection (10 pts)</h2>
+
+  <h3>4.1 LLM Used</h3>
+  <p><strong>Antigravity IDE</strong> (Gemini / Claude) — AI coding assistant integrated in VS Code</p>
+
+  <h3>4.2 Prompt Log (10 Key Prompts)</h3>
+  <table class="data-table">
+    <tr><th>#</th><th>Prompt (User Input)</th><th>AI Action / Result</th></tr>
+    <tr><td>1</td><td>"ช่วยออกแบบ database schema สำหรับ Lab 02"</td><td>สร้าง Prisma schema: Requester, Category, RelatedSystem, Ticket, Attachment</td></tr>
+    <tr><td>2</td><td>"รัน seed ไม่ผ่าน ฟ้อง connection timeout"</td><td>เปลี่ยน connection HTTP → TCP, ติดตั้ง @prisma/adapter-pg</td></tr>
+    <tr><td>3</td><td>"ช่วยทำหน้า My Tickets เป็นตาราง"</td><td>เขียน MyTickets.tsx ใหม่เป็น responsive table + pagination</td></tr>
+    <tr><td>4</td><td>"เขียน unit test เช็คขนาดไฟล์แนบ"</td><td>สร้าง validateAttachment.ts + Vitest 7 test cases</td></tr>
+    <tr><td>5</td><td>"ทำ API สร้าง Ticket"</td><td>POST /api/tickets + validation required fields → 201/400</td></tr>
+    <tr><td>6</td><td>"backend test ไม่ผ่าน error 500"</td><td>แก้ Vitest mock Prisma findUnique → { isActive: true }</td></tr>
+    <tr><td>7</td><td>"อัปโหลดเกิน 5 ไฟล์ ดักให้หน่อย"</td><td>เพิ่ม validation ทั้ง frontend + backend จำกัด 5 ไฟล์</td></tr>
+    <tr><td>8</td><td>"ตั้งค่า Theme Zen Green"</td><td>อัปเดต index.css ด้วย CSS variables ตาม UI spec</td></tr>
+    <tr><td>9</td><td>"ขอรายชื่อมากกว่า 10 คน มี Aran Edlek"</td><td>แก้ seed.ts เพิ่ม requester เป็น 14 คน</td></tr>
+    <tr><td>10</td><td>"เมิร์จเข้า main ใน GitHub"</td><td>git merge lab2-staging → main, push สำเร็จ 41 files</td></tr>
+  </table>
+
+  <h3>4.3 Reflection</h3>
+  <p>การใช้ AI ช่วยเร่งการพัฒนาได้อย่างมาก โดยเฉพาะการ scaffold tests, API endpoints และ debug errors อย่างไรก็ตาม สิ่งที่เรียนรู้คือต้องระบุ requirements ให้ชัดเจน เพราะเมื่อ spec คลุมเครือ AI อาจ assume business logic ผิด (เช่น mock Prisma returns) ซึ่งต้องตรวจสอบและแก้ไขเอง การ verify ผลงานเทียบกับ Definition of Done เป็นขั้นตอนที่ขาดไม่ได้</p>
+
+  <!-- ========================================== -->
+  <!--  PART 5: Requester Select Screen (10 pts)   -->
+  <!-- ========================================== -->
+  <div class="page-break"></div>
+  <h2 class="part-title">Answer Part 5 — Development Requester Select Screen (10 pts)</h2>
+
+  <p>หน้า Requester Selection (simulated login) ที่ <code>localhost:5173/</code><br>
+  แสดง dropdown ของ requester ที่ active จากฐานข้อมูล (14 คน) — มี <strong>Aran Edlek</strong> อยู่บนสุด</p>
+
+  <div class="screenshot-placeholder large">
+    📸 แคปหน้า http://localhost:5173/<br><br>
+    (แสดง TokTickIT Service Desk พร้อม dropdown รายชื่อ active requesters)<br>
+    เลือก Aran Edlek แล้วแคป
+  </div>
+  <div class="screenshot-caption">Requester Selection Screen — localhost:5173</div>
+
+  <!-- ========================================== -->
+  <!--   PART 6: Create Ticket Screen (10 pts)     -->
+  <!-- ========================================== -->
+  <div class="page-break"></div>
+  <h2 class="part-title">Answer Part 6 — Working Ticket Screen: Create Mode (10 pts)</h2>
+
+  <h3>6.1 Create Ticket Form (Desktop View)</h3>
+  <p>หน้าสร้าง Ticket ที่ <code>/tickets/new</code> — ฟิลด์ Title, Description, Category*, Priority, Related System, Attachments</p>
+  <div class="screenshot-placeholder">
+    📸 แคปหน้า http://localhost:5173/tickets/new<br><br>
+    (แสดงฟอร์มครบทุกฟิลด์ พร้อม dropdown Category/Priority/Related System)
+  </div>
+  <div class="screenshot-caption">Create Ticket Form — Desktop viewport</div>
+
+  <h3>6.2 Validation Error State</h3>
+  <p>กดปุ่ม Submit โดยไม่กรอกฟิลด์ required → แสดง error messages สีแดง</p>
+  <div class="screenshot-placeholder small">
+    📸 แคปหน้า Create Ticket ตอนกด Submit โดยไม่กรอก<br><br>
+    (แสดง error: "Title is required", "Description is required", ฯลฯ)
+  </div>
+
+  <h3>6.3 Successful Submission → Ticket Detail</h3>
+  <p>หลังกรอกข้อมูลครบ Submit → redirect ไปหน้า Ticket Detail พร้อม Ticket Number</p>
+  <div class="screenshot-placeholder small">
+    📸 แคปหน้า Ticket Detail หลังสร้าง Ticket สำเร็จ<br><br>
+    (แสดง Ticket Number, Title, Status=OPEN, Priority, Category)
+  </div>
+
+  <!-- ========================================== -->
+  <!--   PART 7: My Tickets Screen (10 pts)        -->
+  <!-- ========================================== -->
+  <div class="page-break"></div>
+  <h2 class="part-title">Answer Part 7 — Working My Tickets Screen (10 pts)</h2>
+
+  <h3>7.1 Ticket List ของ Requester A (Aran Edlek)</h3>
+  <div class="screenshot-placeholder">
+    📸 แคปหน้า http://localhost:5173/my-tickets<br><br>
+    (แสดงตาราง Ticket ของ Aran Edlek พร้อม Search, Category/Priority/Status filter, Pagination)
+  </div>
+  <div class="screenshot-caption">My Tickets — Aran Edlek's view</div>
+
+  <h3>7.2 Cross-Requester Check</h3>
+  <p>เปลี่ยน Requester เป็นคนอื่น → แสดง ticket ของคนนั้นเท่านั้น (หรือแสดง No tickets found)</p>
+  <div class="screenshot-placeholder small">
+    📸 แคปหน้า My Tickets ของ Requester คนอื่น (เช่น Ben Rattana)<br><br>
+    (แสดง No tickets found — หรือ ticket ของ Ben เท่านั้น)
+  </div>
+
+  <h3>7.3 Search / Filter Evidence</h3>
+  <div class="screenshot-placeholder small">
+    📸 แคปหน้า My Tickets หลังจาก Search หรือ Filter<br><br>
+    (แสดงผลลัพธ์ที่ถูก filter)
+  </div>
+
+  <h3>7.4 Empty / No Results State</h3>
+  <div class="screenshot-placeholder small">
+    📸 แคปหน้า My Tickets ตอน filter แล้วไม่มีผลลัพธ์<br><br>
+    (แสดง "No tickets found")
+  </div>
+
+  <!-- ========================================== -->
+  <!--   PART 8: Ticket Detail & Attachments       -->
+  <!-- ========================================== -->
+  <div class="page-break"></div>
+  <h2 class="part-title">Answer Part 8 — Ticket View Mode &amp; Attachments (10 pts)</h2>
+
+  <h3>8.1 Ticket Detail (Read-only)</h3>
+  <p>หน้ารายละเอียด Ticket — แสดงข้อมูลครบ ไม่มีปุ่ม Edit</p>
+  <div class="screenshot-placeholder">
+    📸 แคปหน้า Ticket Detail<br><br>
+    (แสดง Title, Description, Status badge, Priority badge, Category, Related System, Created/Updated dates, Attachments)
+  </div>
+
+  <h3>8.2 Attachment Soft-Delete Evidence</h3>
+  <div class="screenshot-placeholder small">
+    📸 แคปหน้าก่อน/หลังลบ attachment<br><br>
+    (แสดง attachment ก่อนลบ → กดปุ่ม Remove → attachment หายจาก UI)
+  </div>
+
+  <!-- ========================================== -->
+  <!--   PART 9: Zen Green UI & Responsive         -->
+  <!-- ========================================== -->
+  <div class="page-break"></div>
+  <h2 class="part-title">Answer Part 9 — Zen Green UI &amp; Responsive Evidence (10 pts)</h2>
+
+  <h3>9.1 UI Theme: Zen Green</h3>
+  <table class="data-table">
+    <tr><th>Token</th><th>Hex</th><th>Usage</th></tr>
+    <tr><td>--color-primary</td><td>#2D6A4F</td><td>Primary buttons, active states, links</td></tr>
+    <tr><td>--color-primary-light</td><td>#52B788</td><td>Hover states, badges</td></tr>
+    <tr><td>--color-primary-pale</td><td>#D8F3DC</td><td>Background accents</td></tr>
+    <tr><td>--color-surface</td><td>#F8FAF9</td><td>Page background</td></tr>
+    <tr><td>--color-card</td><td>#FFFFFF</td><td>Card backgrounds</td></tr>
+    <tr><td>--color-error</td><td>#C0392B</td><td>Validation errors</td></tr>
+    <tr><td>--color-success</td><td>#27AE60</td><td>Success states</td></tr>
+  </table>
+
+  <h3>9.2 Desktop View (≥ 1024px)</h3>
+  <div class="screenshot-placeholder small">
+    📸 แคปหน้าใดก็ได้ที่ Desktop viewport (1280×800)<br><br>
+    (layout เต็มจอ, ไม่มี horizontal scroll)
+  </div>
+
+  <h3>9.3 Tablet View (768–1023px)</h3>
+  <div class="screenshot-placeholder small">
+    📸 แคปหน้าใดก็ได้ที่ Tablet viewport (768×1024)<br>
+    ใช้ DevTools → Toggle Device → iPad<br><br>
+    (layout ปรับตัว, stacked 2-column)
+  </div>
+
+  <h3>9.4 Mobile View (&lt; 768px)</h3>
+  <div class="screenshot-placeholder small">
+    📸 แคปหน้าใดก็ได้ที่ Mobile viewport (375×812)<br>
+    ใช้ DevTools → Toggle Device → iPhone 12 Pro<br><br>
+    (single-column layout, ไม่มี horizontal scroll)
+  </div>
+
+  <!-- ========================================== -->
+  <!--         DEFINITION OF DONE                  -->
+  <!-- ========================================== -->
+  <div class="page-break"></div>
+  <h2 class="part-title">Definition of Done Checklist</h2>
+  <table class="data-table">
+    <tr><th>รายการ</th><th>สถานะ</th></tr>
+    <tr><td>Acceptance Criteria ทุกข้อผ่าน</td><td>✅ Done</td></tr>
+    <tr><td>Automated tests ผ่านทั้งหมด (Unit + API)</td><td>✅ Done</td></tr>
+    <tr><td>Code merge เข้า lab2-staging ผ่าน PR (#15, #16, #17)</td><td>✅ Done</td></tr>
+    <tr><td>Merge lab2-staging เข้า main</td><td>✅ Done</td></tr>
+    <tr><td>No lint errors</td><td>✅ Done</td></tr>
+    <tr><td>Responsive design verified (Desktop / Tablet / Mobile)</td><td>✅ Done</td></tr>
+    <tr><td>Seed data runs without errors (npm run seed)</td><td>✅ Done</td></tr>
+    <tr><td>docs/lab-02/ai-use.md complete (10 prompts)</td><td>✅ Done</td></tr>
+  </table>
+
+  <h2 class="part-title">REST API Endpoints</h2>
+  <table class="data-table">
+    <tr><th>Method</th><th>Path</th><th>Description</th><th>Response</th></tr>
+    <tr><td>GET</td><td>/api/requesters</td><td>Active requesters list</td><td>200</td></tr>
+    <tr><td>GET</td><td>/api/categories</td><td>All categories</td><td>200</td></tr>
+    <tr><td>GET</td><td>/api/related-systems</td><td>All related systems</td><td>200</td></tr>
+    <tr><td>GET</td><td>/api/tickets</td><td>Ticket list (filter, search, paginate)</td><td>200</td></tr>
+    <tr><td>GET</td><td>/api/tickets/:id</td><td>Ticket detail + attachments</td><td>200</td></tr>
+    <tr><td>POST</td><td>/api/tickets</td><td>Create new ticket</td><td>201</td></tr>
+    <tr><td>POST</td><td>/api/tickets/:id/attachments</td><td>Upload attachment</td><td>201</td></tr>
+    <tr><td>DELETE</td><td>/api/attachments/:id</td><td>Soft-delete attachment</td><td>200</td></tr>
+  </table>
+
+  <hr>
+  <p style="text-align: center; color: #888; font-size: 9pt; margin-top: 30px;">
+    Report generated: September 2026<br>
+    Student: Aran Edlek | ID: 67070505230<br>
+    Repository: github.com/aranedlek/toctickit
+  </p>
+
+</div>
+
+</body>
+</html>

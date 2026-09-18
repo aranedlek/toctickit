@@ -29,8 +29,8 @@ export default function CreateTicket() {
     }
 
     Promise.all([
-      fetch('http://localhost:3000/api/categories').then(r => r.json()),
-      fetch('http://localhost:3000/api/related-systems').then(r => r.json())
+      fetch('/api/categories').then(r => r.json()),
+      fetch('/api/related-systems').then(r => r.json())
     ]).then(([cats, sys]) => {
       setCategories(cats.categories ? cats.categories : cats);
       setSystems(sys);
@@ -40,7 +40,6 @@ export default function CreateTicket() {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const selectedFiles = Array.from(e.target.files);
-      const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'];
       
       const validFiles = selectedFiles.filter(f => {
         const result = validateAttachment({ type: f.type, size: f.size }, files.length);
@@ -66,9 +65,9 @@ export default function CreateTicket() {
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
-    if (!title.trim()) newErrors.title = 'Title is required';
-    if (!description.trim()) newErrors.description = 'Description is required';
-    if (!categoryId) newErrors.categoryId = 'Category is required';
+    if (!title.trim()) newErrors.title = 'Title is required.';
+    if (!description.trim()) newErrors.description = 'Description is required.';
+    if (!categoryId) newErrors.categoryId = 'Please select a category.';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -80,8 +79,7 @@ export default function CreateTicket() {
     setIsSubmitting(true);
 
     try {
-      // 1. Create ticket
-      const ticketRes = await fetch('http://localhost:3000/api/tickets', {
+      const ticketRes = await fetch('/api/tickets', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -97,12 +95,11 @@ export default function CreateTicket() {
       if (!ticketRes.ok) throw new Error('Failed to create ticket');
       const ticket = await ticketRes.json();
 
-      // 2. Upload attachments
       for (const file of files) {
         const formData = new FormData();
         formData.append('file', file);
         
-        await fetch(`http://localhost:3000/api/tickets/${ticket.id}/attachments`, {
+        await fetch(`/api/tickets/${ticket.id}/attachments`, {
           method: 'POST',
           body: formData
         });
@@ -115,60 +112,152 @@ export default function CreateTicket() {
     }
   };
 
+  const currentDate = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+
+  // Function to mock department since it's not in our type
+  const getDept = (name: string) => {
+    if (name.includes('David')) return 'HR';
+    if (name.includes('Jennifer')) return 'Finance';
+    if (name.includes('Michael')) return 'Engineering';
+    if (name.includes('Sarah')) return 'Marketing';
+    return 'IT';
+  };
+
   return (
-    <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-      <button onClick={() => navigate('/my-tickets')} style={{ backgroundColor: 'var(--color-surface)', color: 'var(--color-text-primary)', marginBottom: '16px', border: '1px solid var(--color-border)' }}>
-        ← Back
-      </button>
+    <div style={{ maxWidth: '800px', margin: '0 auto', fontFamily: "'Inter', sans-serif", paddingBottom: '40px' }}>
+      {/* Header Row */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '32px' }}>
+        <div>
+          <h1 style={{ fontSize: '24px', fontWeight: 700, margin: '0 0 8px 0', color: '#111' }}>New Ticket</h1>
+          <p style={{ fontSize: '14px', color: '#666', margin: 0 }}>Describe your IT issue and our team will help you out.</p>
+        </div>
+        <button 
+          onClick={() => navigate('/my-tickets')} 
+          style={{ 
+            backgroundColor: '#fff', 
+            color: '#555', 
+            border: '1px solid #e0e0e0', 
+            borderRadius: '24px', 
+            padding: '6px 16px', 
+            fontSize: '13px', 
+            fontWeight: 600, 
+            cursor: 'pointer' 
+          }}
+        >
+          ← Back
+        </button>
+      </div>
       
-      <div className="card">
-        <h1>Create New Ticket</h1>
-        
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label>Title *</label>
+      <form onSubmit={handleSubmit}>
+        {/* Ticket Details Card */}
+        <div style={{
+          backgroundColor: '#fff',
+          borderRadius: '12px',
+          boxShadow: '0 2px 12px rgba(0,0,0,0.04)',
+          border: '1px solid #eaeaea',
+          padding: '32px',
+          marginBottom: '24px'
+        }}>
+          <h2 style={{ fontSize: '16px', fontWeight: 700, color: '#111', margin: '0 0 24px 0' }}>Ticket Details</h2>
+          
+          {/* Row 1: Requester & Date */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', marginBottom: '20px' }}>
+            <div>
+              <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: '#333', marginBottom: '8px' }}>
+                Requester (Auto-populated)
+              </label>
+              <input 
+                type="text" 
+                value={requester ? `${requester.name} (${getDept(requester.name)})` : ''} 
+                disabled
+                style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1px solid #eaeaea', backgroundColor: '#fafafa', color: '#333', fontSize: '14px' }}
+              />
+            </div>
+            <div>
+              <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: '#333', marginBottom: '8px' }}>
+                Ticket Date
+              </label>
+              <input 
+                type="text" 
+                value={currentDate}
+                disabled
+                style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1px solid #eaeaea', backgroundColor: '#fafafa', color: '#333', fontSize: '14px' }}
+              />
+            </div>
+          </div>
+
+          {/* Row 2: Title */}
+          <div style={{ marginBottom: '20px' }}>
+            <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: '#333', marginBottom: '8px' }}>
+              Title (Summary) <span style={{color: 'red'}}>*</span>
+            </label>
             <input 
               type="text" 
               value={title} 
               onChange={e => setTitle(e.target.value)} 
-              placeholder="Brief summary of the issue"
+              placeholder="Brief description of the issue"
               maxLength={200}
-              style={{ borderColor: errors.title ? 'var(--color-error)' : 'var(--color-border)' }}
+              style={{ 
+                width: '100%', padding: '10px 14px', borderRadius: '8px', fontSize: '14px',
+                border: `1px solid ${errors.title ? '#d32f2f' : '#d0d0d0'}`,
+                backgroundColor: '#fff', color: '#111'
+              }}
             />
-            {errors.title && <div className="form-error">{errors.title}</div>}
+            {errors.title && (
+              <div style={{ color: '#d32f2f', fontSize: '12px', marginTop: '6px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <span style={{ fontSize: '14px' }}>⚠</span> {errors.title}
+              </div>
+            )}
           </div>
 
-          <div className="form-group">
-            <label>Description *</label>
-            <textarea 
-              rows={4}
-              value={description} 
-              onChange={e => setDescription(e.target.value)} 
-              placeholder="Detailed description..."
-              style={{ borderColor: errors.description ? 'var(--color-error)' : 'var(--color-border)' }}
-            />
-            {errors.description && <div className="form-error">{errors.description}</div>}
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-            <div className="form-group">
-              <label>Category *</label>
+          {/* Row 3: Category, System, Priority */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '24px', marginBottom: '20px' }}>
+            <div>
+              <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: '#333', marginBottom: '8px' }}>
+                Category <span style={{color: 'red'}}>*</span>
+              </label>
               <select 
                 value={categoryId} 
                 onChange={e => setCategoryId(e.target.value)}
-                style={{ borderColor: errors.categoryId ? 'var(--color-error)' : 'var(--color-border)' }}
+                style={{ 
+                  width: '100%', padding: '10px 14px', borderRadius: '8px', fontSize: '14px',
+                  border: `1px solid ${errors.categoryId ? '#d32f2f' : '#d0d0d0'}`,
+                  backgroundColor: '#fff', color: categoryId ? '#111' : '#666', appearance: 'auto'
+                }}
               >
-                <option value="">Select a category...</option>
-                {categories.map(c => (
-                  <option key={c.id} value={c.id}>{c.name}</option>
-                ))}
+                <option value="" disabled>Select a category...</option>
+                {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
               </select>
-              {errors.categoryId && <div className="form-error">{errors.categoryId}</div>}
+              {errors.categoryId && (
+                <div style={{ color: '#d32f2f', fontSize: '12px', marginTop: '6px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  <span style={{ fontSize: '14px' }}>⚠</span> {errors.categoryId}
+                </div>
+              )}
             </div>
 
-            <div className="form-group">
-              <label>Priority</label>
-              <select value={priority} onChange={e => setPriority(e.target.value)}>
+            <div>
+              <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: '#333', marginBottom: '8px' }}>
+                Related System
+              </label>
+              <select 
+                value={relatedSystemId} 
+                onChange={e => setRelatedSystemId(e.target.value)}
+                style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1px solid #d0d0d0', backgroundColor: '#fff', color: relatedSystemId ? '#111' : '#666', fontSize: '14px', appearance: 'auto' }}
+              >
+                <option value="">None</option>
+                {systems.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+              </select>
+            </div>
+
+            <div>
+              <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: '#333', marginBottom: '8px' }}>
+                Requested Priority
+              </label>
+              <select 
+                value={priority} 
+                onChange={e => setPriority(e.target.value)}
+                style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1px solid #d0d0d0', backgroundColor: '#fff', color: '#111', fontSize: '14px', appearance: 'auto' }}
+              >
                 <option value="LOW">Low</option>
                 <option value="MEDIUM">Medium</option>
                 <option value="HIGH">High</option>
@@ -177,61 +266,102 @@ export default function CreateTicket() {
             </div>
           </div>
 
-          <div className="form-group">
-            <label>Related System (optional)</label>
-            <select value={relatedSystemId} onChange={e => setRelatedSystemId(e.target.value)}>
-              <option value="">None</option>
-              {systems.map(s => (
-                <option key={s.id} value={s.id}>{s.name}</option>
-              ))}
-            </select>
-          </div>
-
-          <div className="form-group">
-            <label>Attachments ({files.length}/5)</label>
-            <div style={{
-              border: '2px dashed var(--color-border)',
-              borderRadius: '8px',
-              padding: '24px',
-              textAlign: 'center',
-              backgroundColor: 'var(--color-primary-pale)',
-              marginBottom: '16px'
-            }}>
-              <p style={{ margin: '0 0 8px 0', fontSize: '14px' }}>☁ Drag & drop or click</p>
-              <p style={{ margin: 0, fontSize: '12px', color: 'var(--color-text-secondary)' }}>JPG, PNG, WEBP, PDF · Max 5MB</p>
-              <input 
-                type="file" 
-                multiple 
-                accept=".jpg,.jpeg,.png,.webp,.pdf"
-                onChange={handleFileChange}
-                style={{ opacity: 0, position: 'absolute', cursor: 'pointer', width: '200px', marginLeft: '-100px' }} 
-              />
-            </div>
-
-            {files.length > 0 && (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                {files.map((file, index) => (
-                  <div key={index} style={{
-                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                    padding: '8px 12px', border: '1px solid var(--color-border)', borderRadius: '8px'
-                  }}>
-                    <span style={{ fontSize: '14px' }}>{file.name} ({(file.size / 1024 / 1024).toFixed(2)} MB)</span>
-                    <button type="button" onClick={() => removeFile(index)} style={{ padding: '4px 8px', backgroundColor: 'var(--color-error)' }}>
-                      Remove
-                    </button>
-                  </div>
-                ))}
+          {/* Row 4: Description */}
+          <div>
+            <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: '#333', marginBottom: '8px' }}>
+              Description <span style={{color: 'red'}}>*</span>
+            </label>
+            <textarea 
+              rows={4}
+              value={description} 
+              onChange={e => setDescription(e.target.value)} 
+              placeholder="Please describe the issue in detail — include steps to reproduce, error messages, etc."
+              style={{ 
+                width: '100%', padding: '12px 14px', borderRadius: '8px', fontSize: '14px', resize: 'vertical',
+                border: `1px solid ${errors.description ? '#d32f2f' : '#d0d0d0'}`,
+                backgroundColor: '#fff', color: '#111', fontFamily: 'inherit'
+              }}
+            />
+            {errors.description && (
+              <div style={{ color: '#d32f2f', fontSize: '12px', marginTop: '6px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <span style={{ fontSize: '14px' }}>⚠</span> {errors.description}
               </div>
             )}
           </div>
+        </div>
 
-          <div style={{ marginTop: '32px', textAlign: 'right' }}>
-            <button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? 'Submitting...' : 'Submit Ticket'}
-            </button>
+        {/* Attachments Card */}
+        <div style={{
+          backgroundColor: '#fff',
+          borderRadius: '12px',
+          boxShadow: '0 2px 12px rgba(0,0,0,0.04)',
+          border: '1px solid #eaeaea',
+          padding: '32px',
+          marginBottom: '24px'
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+            <h2 style={{ fontSize: '16px', fontWeight: 700, color: '#111', margin: 0 }}>Attachments</h2>
+            <span style={{ fontSize: '13px', color: '#666' }}>{files.length}/5 files</span>
           </div>
-        </form>
-      </div>
+
+          <div style={{
+            border: '2px dashed #d0d0d0',
+            borderRadius: '8px',
+            padding: '32px',
+            textAlign: 'center',
+            backgroundColor: '#fafafa',
+            position: 'relative'
+          }}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#888" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: '12px' }}>
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+            <p style={{ margin: '0 0 4px 0', fontSize: '14px', fontWeight: 600, color: '#333' }}>Drag & drop or click</p>
+            <p style={{ margin: 0, fontSize: '12px', color: '#888' }}>JPG, PNG, WEBP, PDF · Max 5MB</p>
+            <input 
+              type="file" 
+              multiple 
+              accept=".jpg,.jpeg,.png,.webp,.pdf"
+              onChange={handleFileChange}
+              style={{ opacity: 0, position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', cursor: 'pointer' }} 
+            />
+          </div>
+
+          {files.length > 0 && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '16px' }}>
+              {files.map((file, index) => (
+                <div key={index} style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                  padding: '12px 16px', border: '1px solid #eaeaea', borderRadius: '8px',
+                  backgroundColor: '#fff'
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+                      <polyline points="13 2 13 9 20 9"></polyline>
+                    </svg>
+                    <span style={{ fontSize: '13px', color: '#333', fontWeight: 500 }}>{file.name}</span>
+                    <span style={{ fontSize: '12px', color: '#888' }}>({(file.size / 1024 / 1024).toFixed(2)} MB)</span>
+                  </div>
+                  <button type="button" onClick={() => removeFile(index)} style={{ border: 'none', background: 'transparent', color: '#d32f2f', cursor: 'pointer', padding: '4px' }}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
+          <button type="button" onClick={() => navigate('/my-tickets')} style={{ padding: '10px 24px', backgroundColor: '#fff', color: '#333', border: '1px solid #e0e0e0', borderRadius: '24px', fontSize: '14px', fontWeight: 600, cursor: 'pointer' }}>
+            Cancel
+          </button>
+          <button type="submit" disabled={isSubmitting} style={{ padding: '10px 24px', backgroundColor: '#2e7d32', color: '#fff', border: 'none', borderRadius: '24px', fontSize: '14px', fontWeight: 600, cursor: isSubmitting ? 'not-allowed' : 'pointer', opacity: isSubmitting ? 0.7 : 1 }}>
+            {isSubmitting ? 'Submitting...' : 'Submit Ticket'}
+          </button>
+        </div>
+      </form>
     </div>
   );
 }

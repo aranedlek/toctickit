@@ -1,37 +1,41 @@
-import { TicketStatus, Priority } from '../generated/prisma/client';
+import { TicketStatus, Priority, Role } from '../generated/prisma/client';
 import { prisma } from '../src/prismaClient';
-
+import bcrypt from 'bcryptjs';
 
 async function main() {
   console.log('Start seeding...');
 
-  // 1. Seed Requesters
-  const requesters = [
-    { name: 'Aran Edlek', email: 'aran@example.com', isActive: true },
-    { name: 'Anya Suphan', email: 'anya@example.com', isActive: true },
-    { name: 'Ben Rattana', email: 'ben@example.com', isActive: true },
-    { name: 'Chanya Prom', email: 'chanya@example.com', isActive: true },
-    { name: 'Dome Wiriya', email: 'dome@example.com', isActive: true },
-    { name: 'Fah Sai', email: 'fah@example.com', isActive: true },
-    { name: 'Golf Pongsathorn', email: 'golf@example.com', isActive: true },
-    { name: 'Ice Sirichat', email: 'ice@example.com', isActive: true },
-    { name: 'Jay Kittikorn', email: 'jay@example.com', isActive: true },
-    { name: 'Kanya Meechai', email: 'kanya@example.com', isActive: true },
-    { name: 'Luk Nattapon', email: 'luk@example.com', isActive: true },
-    { name: 'Mint Thanawan', email: 'mint@example.com', isActive: true },
-    { name: 'Noon Siriya', email: 'noon@example.com', isActive: true },
-    { name: 'Orm Pakpoom', email: 'orm@example.com', isActive: true },
-    { name: 'Eve Inactive', email: 'eve@example.com', isActive: false },
+  // Create a default hashed password for all seed users: "Password123!"
+  const salt = await bcrypt.genSalt(10);
+  const passwordHash = await bcrypt.hash('Password123!', salt);
+
+  // 1. Seed Users (Requesters, IT Staff, Admin)
+  const users = [
+    // Requesters
+    { name: 'Aran Edlek', email: 'aran@example.com', role: Role.REQUESTER, isActive: true, passwordHash },
+    { name: 'Anya Suphan', email: 'anya@example.com', role: Role.REQUESTER, isActive: true, passwordHash },
+    { name: 'Ben Rattana', email: 'ben@example.com', role: Role.REQUESTER, isActive: true, passwordHash },
+    { name: 'Chanya Prom', email: 'chanya@example.com', role: Role.REQUESTER, isActive: true, passwordHash },
+    { name: 'Eve Inactive', email: 'eve@example.com', role: Role.REQUESTER, isActive: false, passwordHash },
+    
+    // IT Staff
+    { name: 'IT Staff One', email: 'it1@example.com', role: Role.IT_STAFF, isActive: true, passwordHash },
+    { name: 'IT Staff Two', email: 'it2@example.com', role: Role.IT_STAFF, isActive: true, passwordHash },
+    { name: 'IT Staff Three', email: 'it3@example.com', role: Role.IT_STAFF, isActive: true, passwordHash },
+    { name: 'IT Staff Inactive', email: 'it-inactive@example.com', role: Role.IT_STAFF, isActive: false, passwordHash },
+
+    // Administrator
+    { name: 'Admin User', email: 'admin@example.com', role: Role.ADMINISTRATOR, isActive: true, passwordHash },
   ];
 
-  for (const requester of requesters) {
-    await prisma.requester.upsert({
-      where: { email: requester.email },
+  for (const user of users) {
+    await prisma.user.upsert({
+      where: { email: user.email },
       update: {},
-      create: requester,
+      create: user,
     });
   }
-  console.log('Seeded Requesters');
+  console.log('Seeded Users');
 
   // 2. Seed Categories
   const categories = ['IT Support', 'HR Request', 'Finance', 'Facilities'];
@@ -63,7 +67,7 @@ async function main() {
   console.log('Seeded Related Systems');
 
   // 4. Seed Sample Tickets for Anya
-  const anya = await prisma.requester.findUnique({
+  const anya = await prisma.user.findUnique({
     where: { email: 'anya@example.com' },
   });
   const itSupport = await prisma.category.findUnique({
@@ -110,7 +114,7 @@ async function main() {
             priority: Priority.LOW,
             requesterId: anya.id,
             categoryId: itSupport.id,
-            relatedSystemId: null, // no specific system
+            relatedSystemId: null,
           },
         ],
       });
