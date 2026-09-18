@@ -7,6 +7,7 @@ import Login from './pages/Login';
 import ChangePassword from './pages/ChangePassword';
 import TicketQueue from './pages/staff/TicketQueue';
 import StaffTicketDetail from './pages/staff/StaffTicketDetail';
+import UserManagement from './pages/admin/UserManagement';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 
@@ -45,6 +46,11 @@ function App() {
             <Route element={<ProtectedRoute allowedRoles={['IT_STAFF', 'ADMINISTRATOR']} />}>
               <Route path="/staff/tickets" element={<TicketQueue />} />
               <Route path="/staff/tickets/:id" element={<StaffTicketDetail />} />
+            </Route>
+
+            {/* Admin Routes */}
+            <Route element={<ProtectedRoute allowedRoles={['ADMINISTRATOR']} />}>
+              <Route path="/admin/users" element={<UserManagement />} />
             </Route>
 
             <Route path="*" element={<Navigate to="/" replace />} />
