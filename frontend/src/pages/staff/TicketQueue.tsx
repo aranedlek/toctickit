@@ -44,10 +44,14 @@ export default function TicketQueue() {
     const delay = setTimeout(() => {
       fetchApi(`/tickets?${params.toString()}`)
         .then(resData => {
+          console.log('TicketQueue fetched data:', resData);
           setData(resData);
           setLoading(false);
         })
-        .catch(() => setLoading(false));
+        .catch((e) => {
+          console.error('TicketQueue fetch error:', e);
+          setLoading(false);
+        });
     }, 300);
 
     return () => clearTimeout(delay);

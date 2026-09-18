@@ -1,0 +1,30 @@
+{
+  "name": "toctickit",
+  "version": "1.0.0",
+  "description": "This is the repository for the TokTickIT lab series.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aranedlek/toctickit.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/aranedlek/toctickit/issues"
+  },
+  "homepage": "https://github.com/aranedlek/toctickit#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.63.0",
+    "@prisma/client": "^7.10.0",
+    "@types/bcrypt": "^6.0.0",
+    "bcrypt": "^6.0.0"
+  }
+}

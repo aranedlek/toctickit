@@ -84,8 +84,9 @@ export default function ChangePassword() {
 
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           <div>
-            <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#333', marginBottom: '8px' }}>Current Password</label>
+            <label htmlFor="currentPassword" style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#333', marginBottom: '8px' }}>Current Password</label>
             <input
+              id="currentPassword"
               type="password"
               required
               value={currentPassword}
@@ -100,8 +101,9 @@ export default function ChangePassword() {
           </div>
 
           <div>
-            <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#333', marginBottom: '8px' }}>New Password</label>
+            <label htmlFor="newPassword" style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#333', marginBottom: '8px' }}>New Password</label>
             <input
+              id="newPassword"
               type="password"
               required
               value={newPassword}
@@ -116,8 +118,9 @@ export default function ChangePassword() {
           </div>
 
           <div>
-            <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#333', marginBottom: '8px' }}>Confirm New Password</label>
+            <label htmlFor="confirmPassword" style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#333', marginBottom: '8px' }}>Confirm New Password</label>
             <input
+              id="confirmPassword"
               type="password"
               required
               value={confirmPassword}
