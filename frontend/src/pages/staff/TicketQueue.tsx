@@ -1,28 +1,26 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import type { PaginatedTickets, Category } from '../types';
-import Badge from '../components/Badge';
-import { useAuth } from '../contexts/AuthContext';
-import { fetchApi } from '../lib/api';
+import type { PaginatedTickets } from '../../types';
+import Badge from '../../components/Badge';
+import { fetchApi } from '../../lib/api';
+import { useAuth } from '../../contexts/AuthContext';
 
-export default function MyTickets() {
+export default function TicketQueue() {
   const navigate = useNavigate();
   const { user } = useAuth();
   
   const [data, setData] = useState<PaginatedTickets | null>(null);
-  const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   
   const [search, setSearch] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [priorityFilter, setPriorityFilter] = useState('');
+  const [itPriorityFilter, setItPriorityFilter] = useState('');
+  const [ownerFilter, setOwnerFilter] = useState('');
   const [page, setPage] = useState(1);
 
   useEffect(() => {
-    fetchApi('/categories')
-      .then((data: any) => setCategories(data.categories || data))
-      .catch(console.error);
+    // Basic setup if needed
   }, []);
 
   useEffect(() => {
@@ -31,13 +29,17 @@ export default function MyTickets() {
     setLoading(true);
     const params = new URLSearchParams({
       page: page.toString(),
-      limit: '8'
+      limit: '15'
     });
     
     if (search) params.append('search', search);
-    if (categoryFilter) params.append('categoryId', categoryFilter);
     if (statusFilter) params.append('status', statusFilter);
     if (priorityFilter) params.append('priority', priorityFilter);
+    if (itPriorityFilter) params.append('itPriority', itPriorityFilter);
+    if (ownerFilter) {
+      if (ownerFilter === 'me') params.append('ownerId', user.id.toString());
+      else if (ownerFilter === 'unassigned') params.append('ownerId', 'unassigned');
+    }
 
     const delay = setTimeout(() => {
       fetchApi(`/tickets?${params.toString()}`)
@@ -49,13 +51,14 @@ export default function MyTickets() {
     }, 300);
 
     return () => clearTimeout(delay);
-  }, [user, search, categoryFilter, statusFilter, priorityFilter, page]);
+  }, [user, search, statusFilter, priorityFilter, itPriorityFilter, ownerFilter, page]);
 
   const clearFilters = () => {
     setSearch('');
-    setCategoryFilter('');
     setStatusFilter('');
     setPriorityFilter('');
+    setItPriorityFilter('');
+    setOwnerFilter('');
     setPage(1);
   };
 
@@ -65,13 +68,11 @@ export default function MyTickets() {
   };
 
   return (
-    <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '32px 16px', fontFamily: "'Inter', sans-serif" }}>
-      
-      {/* Header section */}
+    <div style={{ margin: '0 auto', padding: '16px', fontFamily: "'Inter', sans-serif" }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px' }}>
         <div>
-          <h1 style={{ fontSize: '24px', fontWeight: 700, margin: '0 0 8px 0', color: '#111' }}>My Tickets</h1>
-          <p style={{ color: '#666', fontSize: '14px', margin: 0 }}>View and track all of your support requests.</p>
+          <h1 style={{ fontSize: '24px', fontWeight: 700, margin: '0 0 8px 0', color: '#111' }}>IT Staff Ticket Queue</h1>
+          <p style={{ color: '#666', fontSize: '14px', margin: 0 }}>Manage and resolve user requests.</p>
         </div>
         <div style={{ display: 'flex', gap: '12px' }}>
           <button 
@@ -80,12 +81,6 @@ export default function MyTickets() {
           >
             ↻ Clear Filters
           </button>
-          <button 
-            onClick={() => navigate('/tickets/new')}
-            style={{ backgroundColor: '#1b5e20', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '6px', fontSize: '14px', fontWeight: 600, cursor: 'pointer' }}
-          >
-            + Create Ticket
-          </button>
         </div>
       </div>
 
@@ -93,40 +88,43 @@ export default function MyTickets() {
         {/* Filters row */}
         <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', marginBottom: '24px' }}>
           <div style={{ flex: 2, minWidth: '250px' }}>
-            <div style={{ fontSize: '12px', fontWeight: 600, color: '#555', marginBottom: '6px' }}>Search by ticket number or summary...</div>
+            <div style={{ fontSize: '12px', fontWeight: 600, color: '#555', marginBottom: '6px' }}>Search Tickets</div>
             <input 
               type="text" 
-              placeholder="🔍 Search..." 
+              placeholder="🔍 Search title..." 
               value={search}
               onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-              style={{ width: '100%', padding: '10px 12px', border: '1px solid #d0d0d0', borderRadius: '6px', fontSize: '14px' }}
+              style={{ width: '100%', padding: '10px 12px', border: '1px solid #d0d0d0', borderRadius: '6px', fontSize: '14px', boxSizing: 'border-box' }}
             />
           </div>
           <div style={{ flex: 1, minWidth: '150px' }}>
-            <div style={{ fontSize: '12px', fontWeight: 600, color: '#555', marginBottom: '6px' }}>Category</div>
-            <select value={categoryFilter} onChange={e => { setCategoryFilter(e.target.value); setPage(1); }} style={{ width: '100%', padding: '10px 12px', border: '1px solid #d0d0d0', borderRadius: '6px', fontSize: '14px' }}>
-              <option value="">All Categories</option>
-              {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-            </select>
-          </div>
-          <div style={{ flex: 1, minWidth: '150px' }}>
-            <div style={{ fontSize: '12px', fontWeight: 600, color: '#555', marginBottom: '6px' }}>Requested Priority</div>
-            <select value={priorityFilter} onChange={e => { setPriorityFilter(e.target.value); setPage(1); }} style={{ width: '100%', padding: '10px 12px', border: '1px solid #d0d0d0', borderRadius: '6px', fontSize: '14px' }}>
-              <option value="">All Priorities</option>
-              <option value="LOW">Low</option>
-              <option value="MEDIUM">Medium</option>
-              <option value="HIGH">High</option>
-              <option value="URGENT">Urgent</option>
+            <div style={{ fontSize: '12px', fontWeight: 600, color: '#555', marginBottom: '6px' }}>Assignment</div>
+            <select value={ownerFilter} onChange={e => { setOwnerFilter(e.target.value); setPage(1); }} style={{ width: '100%', padding: '10px 12px', border: '1px solid #d0d0d0', borderRadius: '6px', fontSize: '14px' }}>
+              <option value="">All Tickets</option>
+              <option value="me">Assigned to Me</option>
+              <option value="unassigned">Unassigned</option>
             </select>
           </div>
           <div style={{ flex: 1, minWidth: '150px' }}>
             <div style={{ fontSize: '12px', fontWeight: 600, color: '#555', marginBottom: '6px' }}>Current Status</div>
             <select value={statusFilter} onChange={e => { setStatusFilter(e.target.value); setPage(1); }} style={{ width: '100%', padding: '10px 12px', border: '1px solid #d0d0d0', borderRadius: '6px', fontSize: '14px' }}>
               <option value="">All Statuses</option>
+              <option value="NEW">New</option>
               <option value="OPEN">Open</option>
               <option value="IN_PROGRESS">In Progress</option>
+              <option value="WAITING_FOR_REQUESTER">Waiting on User</option>
               <option value="RESOLVED">Resolved</option>
               <option value="CLOSED">Closed</option>
+            </select>
+          </div>
+          <div style={{ flex: 1, minWidth: '150px' }}>
+            <div style={{ fontSize: '12px', fontWeight: 600, color: '#555', marginBottom: '6px' }}>IT Priority</div>
+            <select value={itPriorityFilter} onChange={e => { setItPriorityFilter(e.target.value); setPage(1); }} style={{ width: '100%', padding: '10px 12px', border: '1px solid #d0d0d0', borderRadius: '6px', fontSize: '14px' }}>
+              <option value="">All Priorities</option>
+              <option value="LOW">Low</option>
+              <option value="MEDIUM">Medium</option>
+              <option value="HIGH">High</option>
+              <option value="URGENT">Urgent</option>
             </select>
           </div>
         </div>
@@ -136,14 +134,14 @@ export default function MyTickets() {
           <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
             <thead>
               <tr style={{ borderBottom: '2px solid #e0e0e0', color: '#1b5e20' }}>
-                <th style={{ padding: '12px 16px', fontWeight: 600 }}>Ticket No. ↕</th>
-                <th style={{ padding: '12px 16px', fontWeight: 600 }}>Created Date ↕</th>
+                <th style={{ padding: '12px 16px', fontWeight: 600, width: '100px' }}>Ticket No.</th>
                 <th style={{ padding: '12px 16px', fontWeight: 600 }}>Summary</th>
-                <th style={{ padding: '12px 16px', fontWeight: 600 }}>Category</th>
-                <th style={{ padding: '12px 16px', fontWeight: 600, textAlign: 'center' }}>Priority</th>
-                <th style={{ padding: '12px 16px', fontWeight: 600, textAlign: 'center' }}>Current Status</th>
-                <th style={{ padding: '12px 16px', fontWeight: 600 }}>Ticket Owner</th>
-                <th style={{ padding: '12px 16px', fontWeight: 600 }}>Last Updated ↕</th>
+                <th style={{ padding: '12px 16px', fontWeight: 600 }}>Requester</th>
+                <th style={{ padding: '12px 16px', fontWeight: 600, textAlign: 'center' }}>Req. Pri</th>
+                <th style={{ padding: '12px 16px', fontWeight: 600, textAlign: 'center' }}>IT Pri</th>
+                <th style={{ padding: '12px 16px', fontWeight: 600, textAlign: 'center' }}>Status</th>
+                <th style={{ padding: '12px 16px', fontWeight: 600 }}>Owner</th>
+                <th style={{ padding: '12px 16px', fontWeight: 600 }}>Created Date</th>
               </tr>
             </thead>
             <tbody>
@@ -159,7 +157,7 @@ export default function MyTickets() {
                 data.data.map((ticket, index) => (
                   <tr 
                     key={ticket.id} 
-                    onClick={() => navigate(`/tickets/${ticket.id}`)}
+                    onClick={() => navigate(`/staff/tickets/${ticket.id}`)}
                     style={{ 
                       borderBottom: '1px solid #f0f0f0', 
                       cursor: 'pointer',
@@ -168,18 +166,32 @@ export default function MyTickets() {
                     onMouseEnter={e => e.currentTarget.style.backgroundColor = '#f1f8e9'}
                     onMouseLeave={e => e.currentTarget.style.backgroundColor = index % 2 === 0 ? '#fcfcfc' : '#ffffff'}
                   >
-                    <td style={{ padding: '16px', color: '#1b5e20', fontWeight: 600 }}>TKT-2026-{(ticket.id).toString().padStart(5, '0')}</td>
-                    <td style={{ padding: '16px' }}>{formatDate(ticket.createdAt)}</td>
-                    <td style={{ padding: '16px', fontWeight: 500, color: '#333' }}>{ticket.title}</td>
-                    <td style={{ padding: '16px', color: '#666' }}>{ticket.category?.name || '-'}</td>
+                    <td style={{ padding: '16px', color: '#1b5e20', fontWeight: 600 }}>TKT-{(ticket.id).toString().padStart(4, '0')}</td>
+                    <td style={{ padding: '16px', fontWeight: 500, color: '#333' }}>
+                      <div style={{ maxWidth: '300px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                        {ticket.title}
+                      </div>
+                    </td>
+                    <td style={{ padding: '16px', color: '#666' }}>{ticket.requester?.name}</td>
                     <td style={{ padding: '16px', textAlign: 'center' }}>
                       <Badge type="priority" value={ticket.priority} />
                     </td>
                     <td style={{ padding: '16px', textAlign: 'center' }}>
+                      <Badge type="priority" value={ticket.itPriority} />
+                    </td>
+                    <td style={{ padding: '16px', textAlign: 'center' }}>
                       <Badge type="status" value={ticket.status} />
                     </td>
-                    <td style={{ padding: '16px' }}>{user?.name}</td>
-                    <td style={{ padding: '16px', color: '#666' }}>{formatDate(ticket.updatedAt)}</td>
+                    <td style={{ padding: '16px' }}>
+                      {ticket.ticketOwner ? (
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', backgroundColor: '#e3f2fd', color: '#1565c0', padding: '4px 8px', borderRadius: '12px', fontSize: '11px', fontWeight: 600 }}>
+                          {ticket.ticketOwner.id === user?.id ? 'Me' : ticket.ticketOwner.name.split(' ')[0]}
+                        </span>
+                      ) : (
+                        <span style={{ color: '#999', fontStyle: 'italic', fontSize: '12px' }}>Unassigned</span>
+                      )}
+                    </td>
+                    <td style={{ padding: '16px', color: '#666' }}>{formatDate(ticket.createdAt)}</td>
                   </tr>
                 ))
               )}
@@ -191,7 +203,7 @@ export default function MyTickets() {
         {!loading && data && data.totalPages > 0 && (
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '24px', paddingTop: '16px', borderTop: '1px solid #f0f0f0' }}>
             <div style={{ fontSize: '13px', color: '#666' }}>
-              Showing {((page - 1) * 8) + 1} to {Math.min(page * 8, data.total)} of {data.total} tickets
+              Showing {((page - 1) * data.limit) + 1} to {Math.min(page * data.limit, data.total)} of {data.total} tickets
             </div>
             <div style={{ display: 'flex', gap: '4px' }}>
               <button 
@@ -199,10 +211,9 @@ export default function MyTickets() {
                 onClick={() => setPage(p => p - 1)}
                 style={{ padding: '6px 12px', border: '1px solid #d0d0d0', backgroundColor: '#fff', borderRadius: '4px', cursor: page === 1 ? 'not-allowed' : 'pointer', fontSize: '13px' }}
               >
-                &lt; Previous
+                Previous
               </button>
               
-              {/* Simple page numbers */}
               {Array.from({ length: data.totalPages }).map((_, i) => (
                 <button
                   key={i + 1}
@@ -226,7 +237,7 @@ export default function MyTickets() {
                 onClick={() => setPage(p => p + 1)}
                 style={{ padding: '6px 12px', border: '1px solid #d0d0d0', backgroundColor: '#fff', borderRadius: '4px', cursor: page === data.totalPages ? 'not-allowed' : 'pointer', fontSize: '13px' }}
               >
-                Next &gt;
+                Next
               </button>
             </div>
           </div>

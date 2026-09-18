@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import type { Requester, Category, RelatedSystem } from '../types';
+import type { Category, RelatedSystem } from '../types';
 import { validateAttachment } from '../utils/validateAttachment';
+import { useAuth } from '../contexts/AuthContext';
+import { fetchApi } from '../lib/api';
 
 export default function CreateTicket() {
   const navigate = useNavigate();
-  const [requester, setRequester] = useState<Requester | null>(null);
+  const { user } = useAuth();
   
   const [categories, setCategories] = useState<Category[]>([]);
   const [systems, setSystems] = useState<RelatedSystem[]>([]);
@@ -21,21 +23,14 @@ export default function CreateTicket() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    const saved = localStorage.getItem('requester');
-    if (!saved) {
-      navigate('/');
-    } else {
-      setRequester(JSON.parse(saved));
-    }
-
     Promise.all([
-      fetch('/api/categories').then(r => r.json()),
-      fetch('/api/related-systems').then(r => r.json())
+      fetchApi('/categories'),
+      fetchApi('/related-systems')
     ]).then(([cats, sys]) => {
       setCategories(cats.categories ? cats.categories : cats);
       setSystems(sys);
     });
-  }, [navigate]);
+  }, []);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -74,32 +69,27 @@ export default function CreateTicket() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validate() || !requester) return;
+    if (!validate() || !user) return;
 
     setIsSubmitting(true);
 
     try {
-      const ticketRes = await fetch('/api/tickets', {
+      const ticket = await fetchApi('/tickets', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           title,
           description,
           categoryId: parseInt(categoryId),
           priority,
           relatedSystemId: relatedSystemId ? parseInt(relatedSystemId) : null,
-          requesterId: requester.id
         })
       });
-
-      if (!ticketRes.ok) throw new Error('Failed to create ticket');
-      const ticket = await ticketRes.json();
 
       for (const file of files) {
         const formData = new FormData();
         formData.append('file', file);
         
-        await fetch(`/api/tickets/${ticket.id}/attachments`, {
+        await fetchApi(`/tickets/${ticket.id}/attachments`, {
           method: 'POST',
           body: formData
         });
@@ -168,7 +158,7 @@ export default function CreateTicket() {
               </label>
               <input 
                 type="text" 
-                value={requester ? `${requester.name} (${getDept(requester.name)})` : ''} 
+                value={user ? `${user.name} (${getDept(user.name)})` : ''} 
                 disabled
                 style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1px solid #eaeaea', backgroundColor: '#fafafa', color: '#333', fontSize: '14px' }}
               />
