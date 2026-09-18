@@ -12,26 +12,26 @@ async function main() {
   // 1. Seed Users (Requesters, IT Staff, Admin)
   const users = [
     // Requesters
-    { name: 'Aran Edlek', email: 'aran@example.com', role: Role.REQUESTER, isActive: true, passwordHash },
-    { name: 'Anya Suphan', email: 'anya@example.com', role: Role.REQUESTER, isActive: true, passwordHash },
-    { name: 'Ben Rattana', email: 'ben@example.com', role: Role.REQUESTER, isActive: true, passwordHash },
-    { name: 'Chanya Prom', email: 'chanya@example.com', role: Role.REQUESTER, isActive: true, passwordHash },
-    { name: 'Eve Inactive', email: 'eve@example.com', role: Role.REQUESTER, isActive: false, passwordHash },
+    { name: 'Aran Edlek', email: 'aran@example.com', role: Role.REQUESTER, isActive: true, passwordHash, requiresPasswordChange: false },
+    { name: 'Anya Suphan', email: 'anya@example.com', role: Role.REQUESTER, isActive: true, passwordHash, requiresPasswordChange: false },
+    { name: 'Ben Rattana', email: 'ben@example.com', role: Role.REQUESTER, isActive: true, passwordHash, requiresPasswordChange: false },
+    { name: 'Chanya Prom', email: 'chanya@example.com', role: Role.REQUESTER, isActive: true, passwordHash, requiresPasswordChange: false },
+    { name: 'Eve Inactive', email: 'eve@example.com', role: Role.REQUESTER, isActive: false, passwordHash, requiresPasswordChange: false },
     
     // IT Staff
-    { name: 'IT Staff One', email: 'it1@example.com', role: Role.IT_STAFF, isActive: true, passwordHash },
-    { name: 'IT Staff Two', email: 'it2@example.com', role: Role.IT_STAFF, isActive: true, passwordHash },
-    { name: 'IT Staff Three', email: 'it3@example.com', role: Role.IT_STAFF, isActive: true, passwordHash },
-    { name: 'IT Staff Inactive', email: 'it-inactive@example.com', role: Role.IT_STAFF, isActive: false, passwordHash },
+    { name: 'IT Staff One', email: 'it1@example.com', role: Role.IT_STAFF, isActive: true, passwordHash, requiresPasswordChange: false },
+    { name: 'IT Staff Two', email: 'it2@example.com', role: Role.IT_STAFF, isActive: true, passwordHash, requiresPasswordChange: false },
+    { name: 'IT Staff Three', email: 'it3@example.com', role: Role.IT_STAFF, isActive: true, passwordHash, requiresPasswordChange: false },
+    { name: 'IT Staff Inactive', email: 'it-inactive@example.com', role: Role.IT_STAFF, isActive: false, passwordHash, requiresPasswordChange: false },
 
     // Administrator
-    { name: 'Admin User', email: 'admin@example.com', role: Role.ADMINISTRATOR, isActive: true, passwordHash },
+    { name: 'Admin User', email: 'admin@example.com', role: Role.ADMINISTRATOR, isActive: true, passwordHash, requiresPasswordChange: false },
   ];
 
   for (const user of users) {
     await prisma.user.upsert({
       where: { email: user.email },
-      update: {},
+      update: user,
       create: user,
     });
   }
