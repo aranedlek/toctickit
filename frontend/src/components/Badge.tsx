@@ -35,7 +35,7 @@ export default function Badge({ type, value }: BadgeProps) {
       fontWeight: 600,
       display: 'inline-block'
     }}>
-      {value.replace('_', ' ')}
+      {value ? value.replace('_', ' ') : 'UNKNOWN'}
     </span>
   );
 }
