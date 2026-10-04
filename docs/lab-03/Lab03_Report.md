@@ -1,13 +1,27 @@
-# Lab 03 Report: Authentication, Authorization & Role-Based Operations
-## TokTickIT IT Service Desk
+# TokTickIT — Lab 3 Comprehensive Submission Report
 
-| รายการ | รายละเอียด |
-|--------|-----------| 
-| **ชื่อ-นามสกุล** | Aran Edlek |
-| **รหัสนักศึกษา** | 67070505230 |
-| **วิชา** | Software Engineering Practice |
-| **Lab** | Lab 03 – Authentication & Role-Based Sprint |
-| **Repository** | https://github.com/aranedlek/toctickit |
+**Authentication, Roles, IT Staff Ticketing, and Admin Screens (Spec-Driven & Test-Driven Development)**
+
+**Course:** CPE 334 Introduction to Software Engineering in the Age of AI Agents (Semester 1/2026)
+**Total Points:** 60 Points
+**Student Name:** Aran Edlek (`aranedlek`)
+**Reviewer Partner Name:** Jinjuta Antant (GitHub: `Ponatinylilbug`)
+**Repository:** https://github.com/aranedlek/toctickit
+**Integration Workflow:** Feature branches -> `lab3-staging` -> `main`
+**Release Pull Request:** PR #31 (Release: Lab 03 — Docs & Finalization) — **Status: MERGED ✅ (Merged by Ponatinylilbug)**
+
+---
+
+## Executive Summary
+
+TokTickIT Lab 3 elevates the Requester MVP from Lab 2 into an enterprise-grade IT Service Management platform. The temporary development requester mock dropdown was completely decommissioned and replaced by **real JWT authentication** and **strict server-side Role-Based Access Control (RBAC)** across three distinct system roles: **Requester**, **IT Staff**, and **Administrator**.
+
+Key product increments delivered:
+
+1. **Real Authentication & Mandatory First-Login Password Change:** Email/Password authentication with bcrypt password hashing, JWT bearer tokens, session persistence, and enforced password change on first login.
+2. **Server-Side RBAC & Data Protection:** Strict authorization checks on all endpoints; Requesters receive `403 Forbidden` if attempting to view confidential IT internal notes or admin APIs.
+3. **IT Staff Ticket Queue & Lifecycle Operations:** Advanced search, multifaceted filtering (status, priority, category, owner), pagination, ticket claiming/reassignment, IT priority elevation, and status workflow transitions.
+4. **Public Comments vs. Confidential Internal Notes:** Dual-thread communication ensuring transparent communication with Requesters while safeguarding internal staff discussions.
 
 ---
 
