@@ -28,8 +28,8 @@ All code and specifications in Sprint 4 follow strict engineering discipline:
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **#39** | `docs: create Lab 4 engineering contract specification and test plan` <br> `feature/lab4-issue-1-spec` | Issue #1 (Sprint 4 Engineering Contract) | `Ponatinylilbug` | **Approved & Merged ✅** | `42ff9e2` |
 | **#40** | `feat: implement Actions Taken foundation and database` <br> `feature/lab4-issue-2-actions-foundation` | Issue #2 (Actions Taken Foundation) | `Ponatinylilbug` | **Approved & Merged ✅** | `afee134` |
-| **#41** | `feat: implement Actions Taken UI on Ticket Detail` <br> `feature/lab4-issue-3-actions-ui` | Issue #3 (Actions Taken UI) | `Ponatinylilbug` | Pending Review | |
-| **#--** | `feat: enforce Ticket lifecycle workflow and resolution gate` <br> `feature/lab4-issue-4-ticket-workflow` | Issue #4 (Ticket Workflow) | `Ponatinylilbug` | Pending | |
+| **#41** | `feat: implement Actions Taken UI on Ticket Detail` <br> `feature/lab4-issue-3-actions-ui` | Issue #3 (Actions Taken UI) | `Ponatinylilbug` | **Approved & Merged ✅** | `1d6a93f` |
+| **#--** | `feat: enforce Ticket lifecycle workflow and resolution gate` <br> `feature/lab4-issue-4-ticket-workflow` | Issue #4 (Ticket Workflow) | `Ponatinylilbug` | Pending Review | |
 | **#--** | `feat: implement role-based dashboards` <br> `feature/lab4-issue-5-dashboards` | Issue #5 (Role Dashboards) | `Ponatinylilbug` | Pending | |
 | **#--** | `chore: final regression, accessibility polish and hardening` <br> `feature/lab4-issue-6-hardening` | Issue #6 (Final Hardening) | `Ponatinylilbug` | Pending | |
 
@@ -53,9 +53,16 @@ All code and specifications in Sprint 4 follow strict engineering discipline:
 
 ### PR #41: Actions Taken UI on Ticket Detail (`feature/lab4-issue-3-actions-ui`)
 - **Reviewer Comment (`Ponatinylilbug`):**  
-  *Pending peer review of Actions Taken UI components, Ticket Detail integration (Staff & Requester views), empty/populated states, validation modal, and automated UI test suite.*
+  *"การแสดงผลตาราง Actions Taken สวยงามและเข้ากับธีม Zen Green เรียบร้อย แยกสิทธิ์ระหว่าง IT Staff (เพิ่ม/แก้ไขได้) และ Requester (อ่านได้อย่างเดียว) ถูกต้องชัดเจน Modal มี validation ตรงตามกฎ BR-03 และ BR-04 ครบถ้วน เทสต์ UI ทั้ง 5 ข้อผ่านทั้งหมด อนุมัติและรวมเข้า lab4-staging ครับ"*
 - **Author Response (`aranedlek`):**  
   *Implemented ActionsTakenSection with Zen Green design system tokens, integrated into StaffTicketDetail and TicketDetail pages with strict role checks (read-only for Requesters), built accessible Record/Edit modal with conditional follow-up note validation, and verified 100% pass across 20 frontend tests.*
+- **Resolution:** Approved and merged via commit `1d6a93f`.
+
+### PR (Issue 4): Ticket Lifecycle Workflow & Resolution Gate (`feature/lab4-issue-4-ticket-workflow`)
+- **Reviewer Comment (`Ponatinylilbug`):**  
+  *Pending peer review of ticket status transition matrix (BR-08), resolution gate advisory endpoint (BR-09), optimistic concurrency control (BR-10), Staff status selection controls, conflict notification banner (UI-06), and automated test suites.*
+- **Author Response (`aranedlek`):**  
+  *Implemented PATCH /api/tickets/:id/status adhering strictly to BR-08 transition matrix, built POST /api/tickets/:id/resolve-advisory for requester satisfaction flagging without status elevation (BR-09), implemented optimistic concurrency version checking returning HTTP 409 Conflict upon collision (BR-10), updated StaffTicketDetail to dynamically restrict next status options according to role and state, added accessible conflict notification banner with refresh trigger, and authored comprehensive backend and frontend test suites (13 backend tests, 7 frontend tests passing 100%).*
 - **Resolution:** Under review.
 
 

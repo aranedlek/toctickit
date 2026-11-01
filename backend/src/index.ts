@@ -17,6 +17,7 @@ import ticketsRouter from './routes/tickets';
 import attachmentsRouter from './routes/attachments';
 import authRouter from './routes/auth';
 import usersRouter from './routes/users';
+import ticketWorkflowRouter from './routes/ticketWorkflow';
 
 // GET /health — health check
 app.get('/health', (_req, res) => {
@@ -27,6 +28,7 @@ app.use('/api/requesters', requestersRouter);
 app.use('/api/categories', categoriesRouter);
 app.use('/api/related-systems', relatedSystemsRouter);
 app.use('/api/tickets', ticketsRouter);
+app.use('/api/tickets', ticketWorkflowRouter);
 app.use('/api/attachments', attachmentsRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/users', usersRouter);
