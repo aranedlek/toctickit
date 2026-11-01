@@ -26,7 +26,7 @@ All code and specifications in Sprint 4 follow strict engineering discipline:
 
 | PR # | Title & Branch | Scope / Issue | Reviewer | Decision | Merge Commit |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **#--** | `docs: create Lab 4 engineering contract specification` <br> `feature/lab4-issue-1-spec` | Issue #1 (Sprint 4 Engineering Contract) | `Ponatinylilbug` | Pending Review | |
+| **#39** | `docs: create Lab 4 engineering contract specification and test plan` <br> `feature/lab4-issue-1-spec` | Issue #1 (Sprint 4 Engineering Contract) | `Ponatinylilbug` | Pending Review | |
 | **#--** | `feat: implement Actions Taken foundation and database` <br> `feature/lab4-issue-2-actions-foundation` | Issue #2 (Actions Taken Foundation) | `Ponatinylilbug` | Pending | |
 | **#--** | `feat: implement Actions Taken UI on Ticket Detail` <br> `feature/lab4-issue-3-actions-ui` | Issue #3 (Actions Taken UI) | `Ponatinylilbug` | Pending | |
 | **#--** | `feat: enforce Ticket lifecycle workflow and resolution gate` <br> `feature/lab4-issue-4-ticket-workflow` | Issue #4 (Ticket Workflow) | `Ponatinylilbug` | Pending | |
@@ -37,7 +37,7 @@ All code and specifications in Sprint 4 follow strict engineering discipline:
 
 ## 3. Detailed Review Feedback & Author Responses
 
-### PR: Sprint 4 Engineering Contract Specification (`feature/lab4-issue-1-spec`)
+### PR #39: Sprint 4 Engineering Contract Specification (`feature/lab4-issue-1-spec`)
 - **Reviewer Comment (`Ponatinylilbug`):**  
   *Pending peer review of initial specification documents (`specification.md`, `ui-spec.md`, `api-spec.md`, `tests.md`).*
 - **Author Response (`aranedlek`):**  
