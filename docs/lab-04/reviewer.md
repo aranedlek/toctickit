@@ -65,4 +65,11 @@ All code and specifications in Sprint 4 follow strict engineering discipline:
   *Implemented PATCH /api/tickets/:id/status adhering strictly to BR-08 transition matrix, built POST /api/tickets/:id/resolve-advisory for requester satisfaction flagging without status elevation (BR-09), implemented optimistic concurrency version checking returning HTTP 409 Conflict upon collision (BR-10), updated StaffTicketDetail to dynamically restrict next status options according to role and state, added accessible conflict notification banner with refresh trigger, and authored comprehensive backend and frontend test suites (13 backend tests, 7 frontend tests passing 100%).*
 - **Resolution:** Approved and merged into `lab4-staging` via commit `937eaf5`.
 
+### PR (Issue 5): Role-based Dashboards (`feature/lab4-issue-5-dashboards`)
+- **Reviewer Comment (`Ponatinylilbug`):**  
+  *Pending peer review of IT Staff Dashboard (/staff/dashboard), Requester Dashboard (/requester/dashboard), Authoritative Prisma aggregations (BR-11), strict Requester data isolation (BR-12), graceful zero-metric and empty states (BR-13), responsive layout, and automated test suites.*
+- **Author Response (`aranedlek`):**  
+  *Implemented authoritative backend aggregation routes GET /api/dashboard/staff, GET /api/dashboard/requester, and GET /api/dashboard/admin; built IT Staff Dashboard with 5 interactive metric cards and clickable drill-downs, priority distribution breakdown, and recent tickets table; built Requester Dashboard with 4 personalized metric cards, recent requests list, and quick-action shortcuts; added graceful zero-count and empty states conforming to BR-13; integrated into top navigation; and authored 8 backend unit tests and 6 frontend component tests passing 100%.*
+- **Resolution:** Under review.
+
 

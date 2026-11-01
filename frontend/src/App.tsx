@@ -9,6 +9,8 @@ import TicketQueue from './pages/staff/TicketQueue';
 import StaffTicketDetail from './pages/staff/StaffTicketDetail';
 import Settings from './pages/staff/Settings';
 import UserManagement from './pages/admin/UserManagement';
+import StaffDashboard from './pages/staff/StaffDashboard';
+import RequesterDashboard from './pages/RequesterDashboard';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 
@@ -17,8 +19,8 @@ const RootRedirect = () => {
   const { user, isLoading } = useAuth();
   if (isLoading) return null;
   if (!user) return <Navigate to="/login" replace />;
-  if (user.role === 'REQUESTER') return <Navigate to="/my-tickets" replace />;
-  if (user.role === 'IT_STAFF' || user.role === 'ADMINISTRATOR') return <Navigate to="/staff/tickets" replace />;
+  if (user.role === 'REQUESTER') return <Navigate to="/requester/dashboard" replace />;
+  if (user.role === 'IT_STAFF' || user.role === 'ADMINISTRATOR') return <Navigate to="/staff/dashboard" replace />;
   return <Navigate to="/login" replace />;
 };
 
@@ -38,6 +40,7 @@ function App() {
 
             {/* Requester Routes */}
             <Route element={<ProtectedRoute allowedRoles={['REQUESTER']} />}>
+              <Route path="/requester/dashboard" element={<RequesterDashboard />} />
               <Route path="/my-tickets" element={<MyTickets />} />
               <Route path="/tickets/new" element={<CreateTicket />} />
               <Route path="/tickets/:id" element={<TicketDetail />} />
@@ -45,6 +48,7 @@ function App() {
 
             {/* IT Staff & Admin Routes */}
             <Route element={<ProtectedRoute allowedRoles={['IT_STAFF', 'ADMINISTRATOR']} />}>
+              <Route path="/staff/dashboard" element={<StaffDashboard />} />
               <Route path="/staff/tickets" element={<TicketQueue />} />
               <Route path="/staff/tickets/:id" element={<StaffTicketDetail />} />
               <Route path="/staff/settings" element={<Settings />} />
