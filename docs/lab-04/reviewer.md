@@ -30,8 +30,8 @@ All code and specifications in Sprint 4 follow strict engineering discipline:
 | **#40** | `feat: implement Actions Taken foundation and database` <br> `feature/lab4-issue-2-actions-foundation` | Issue #2 (Actions Taken Foundation) | `Ponatinylilbug` | **Approved & Merged ✅** | `afee134` |
 | **#41** | `feat: implement Actions Taken UI on Ticket Detail` <br> `feature/lab4-issue-3-actions-ui` | Issue #3 (Actions Taken UI) | `Ponatinylilbug` | **Approved & Merged ✅** | `1d6a93f` |
 | **#42** | `feat: enforce Ticket lifecycle workflow and resolution gate` <br> `feature/lab4-issue-4-ticket-workflow` | Issue #4 (Ticket Workflow) | `Ponatinylilbug` | **Approved & Merged ✅** | `937eaf5` |
-| **#43** | `feat: implement role-based dashboards` <br> `feature/lab4-issue-5-dashboards` | Issue #5 (Role Dashboards) | `Ponatinylilbug` | Pending Review | |
-| **#--** | `chore: final regression, accessibility polish and hardening` <br> `feature/lab4-issue-6-hardening` | Issue #6 (Final Hardening) | `Ponatinylilbug` | Pending | |
+| **#43** | `feat: implement role-based dashboards` <br> `feature/lab4-issue-5-dashboards` | Issue #5 (Role Dashboards) | `Ponatinylilbug` | **Approved & Merged ✅** | `f2c512a` |
+| **#44** | `chore: final regression, accessibility polish and hardening` <br> `feature/lab4-issue-6-hardening` | Issue #6 (Final Hardening) | `Ponatinylilbug` | Pending Review | |
 
 ---
 
@@ -67,9 +67,16 @@ All code and specifications in Sprint 4 follow strict engineering discipline:
 
 ### PR #43: Role-based Dashboards (`feature/lab4-issue-5-dashboards`)
 - **Reviewer Comment (`Ponatinylilbug`):**  
-  *Pending peer review of IT Staff Dashboard (/staff/dashboard), Requester Dashboard (/requester/dashboard), Authoritative Prisma aggregations (BR-11), strict Requester data isolation (BR-12), graceful zero-metric and empty states (BR-13), responsive layout, and automated test suites.*
+  *"แดชบอร์ดทั้งของ IT Staff และ Requester ใช้งานง่าย สวยงามตรงตามธีม Zen Green การคำนวณ aggregation ผ่าน backend query (BR-11) ทำได้ถูกต้อง แยกข้อมูล Requester เด็ดขาด (BR-12) และมี empty state รองรับกรณีไม่มีตั๋ว (BR-13) เทสต์ทั้ง backend และ frontend รวม 14 ข้อผ่าน 100% อนุมัติและรวมเข้า lab4-staging ครับ"*
 - **Author Response (`aranedlek`):**  
   *Implemented authoritative backend aggregation routes GET /api/dashboard/staff, GET /api/dashboard/requester, and GET /api/dashboard/admin; built IT Staff Dashboard with 5 interactive metric cards and clickable drill-downs, priority distribution breakdown, and recent tickets table; built Requester Dashboard with 4 personalized metric cards, recent requests list, and quick-action shortcuts; added graceful zero-count and empty states conforming to BR-13; integrated into top navigation; and authored 8 backend unit tests and 6 frontend component tests passing 100%.*
-- **Resolution:** Under review.
+- **Resolution:** Approved and merged into `lab4-staging` via commit `f2c512a`.
+
+### PR #44: Final Regression, Accessibility Polish, and Hardening (`feature/lab4-issue-6-hardening`)
+- **Reviewer Comment (`Ponatinylilbug`):**  
+  *Pending review of final regression across all Lab 1–4 modules, WCAG 2.1 AA keyboard accessibility and non-color cues, regression test mirrors, Playwright E2E suites, and full Definition of Done completion.*
+- **Author Response (`aranedlek`):**  
+  *Executed full regression testing across backend (64 tests) and frontend (33 tests) achieving 100% pass rate; added WCAG 2.1 AA accessibility improvements including modal Escape key close listeners, ARIA dialog attributes, enhanced visible focus-visible indicators, and non-color semantic icons on status/priority badges; created Lab 1–3 regression test mirror `server/tests/lab-03/regression.api.test.ts`; created complete Playwright E2E test suites for Actions Taken flow, resolution gate, and role dashboards (`e2e/lab-04/`); completed all Definition of Done items; and verified clean build with zero TypeScript and linter errors.*
+- **Resolution:** Ready for final review and staging merge.
 
 

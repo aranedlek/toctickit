@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import type { ActionTaken } from '../types';
 import { fetchApi } from '../lib/api';
 
@@ -72,6 +72,18 @@ export default function ActionsTakenSection({
     setErrors({});
     setApiError('');
   };
+
+  // Keyboard navigation & accessibility: Close modal on Escape
+  useEffect(() => {
+    if (!modalOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        closeModal();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [modalOpen]);
 
   const validate = (): boolean => {
     const newErrors: { [key: string]: string } = {};
