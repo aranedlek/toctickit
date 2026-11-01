@@ -29,7 +29,7 @@ All code and specifications in Sprint 4 follow strict engineering discipline:
 | **#39** | `docs: create Lab 4 engineering contract specification and test plan` <br> `feature/lab4-issue-1-spec` | Issue #1 (Sprint 4 Engineering Contract) | `Ponatinylilbug` | **Approved & Merged ✅** | `42ff9e2` |
 | **#40** | `feat: implement Actions Taken foundation and database` <br> `feature/lab4-issue-2-actions-foundation` | Issue #2 (Actions Taken Foundation) | `Ponatinylilbug` | **Approved & Merged ✅** | `afee134` |
 | **#41** | `feat: implement Actions Taken UI on Ticket Detail` <br> `feature/lab4-issue-3-actions-ui` | Issue #3 (Actions Taken UI) | `Ponatinylilbug` | **Approved & Merged ✅** | `1d6a93f` |
-| **#--** | `feat: enforce Ticket lifecycle workflow and resolution gate` <br> `feature/lab4-issue-4-ticket-workflow` | Issue #4 (Ticket Workflow) | `Ponatinylilbug` | Pending Review | |
+| **#42** | `feat: enforce Ticket lifecycle workflow and resolution gate` <br> `feature/lab4-issue-4-ticket-workflow` | Issue #4 (Ticket Workflow) | `Ponatinylilbug` | Pending Review | |
 | **#--** | `feat: implement role-based dashboards` <br> `feature/lab4-issue-5-dashboards` | Issue #5 (Role Dashboards) | `Ponatinylilbug` | Pending | |
 | **#--** | `chore: final regression, accessibility polish and hardening` <br> `feature/lab4-issue-6-hardening` | Issue #6 (Final Hardening) | `Ponatinylilbug` | Pending | |
 
@@ -58,7 +58,7 @@ All code and specifications in Sprint 4 follow strict engineering discipline:
   *Implemented ActionsTakenSection with Zen Green design system tokens, integrated into StaffTicketDetail and TicketDetail pages with strict role checks (read-only for Requesters), built accessible Record/Edit modal with conditional follow-up note validation, and verified 100% pass across 20 frontend tests.*
 - **Resolution:** Approved and merged via commit `1d6a93f`.
 
-### PR (Issue 4): Ticket Lifecycle Workflow & Resolution Gate (`feature/lab4-issue-4-ticket-workflow`)
+### PR #42: Ticket Lifecycle Workflow & Resolution Gate (`feature/lab4-issue-4-ticket-workflow`)
 - **Reviewer Comment (`Ponatinylilbug`):**  
   *Pending peer review of ticket status transition matrix (BR-08), resolution gate advisory endpoint (BR-09), optimistic concurrency control (BR-10), Staff status selection controls, conflict notification banner (UI-06), and automated test suites.*
 - **Author Response (`aranedlek`):**  
