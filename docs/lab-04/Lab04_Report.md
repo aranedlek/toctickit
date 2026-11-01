@@ -1,6 +1,5 @@
-# TokTickIT — Lab 4 Comprehensive Submission Report
-
-**Actions Taken, Dashboards, and Final Regression (Spec-Driven & Test-Driven Development)**
+# CPE 334 Software Engineering
+# LAB 04 : TokTickIT Actions Taken, Dashboards, and Final Regression.
 
 **Course:** CPE 334 Introduction to Software Engineering in the Age of AI Agents (Semester 1/2026)  
 **Total Points:** 60 Points  
@@ -12,363 +11,314 @@
 
 ---
 
-## Executive Summary
+## Answer Part 1: Git Use with Engineering Workflow
 
-TokTickIT Lab 4 delivers the definitive completion of the core service-desk workflow. Building upon the robust authentication, multi-tenant roles, and ticket foundation established in Labs 1 through 3, Sprint 4 introduces:
+### 1.1 Git Workflow
 
-1. **Actions Taken Work Structure (Parent-Child Model):** A dedicated, auditable table linked to Tickets capturing structured work logs with auto-bound performer identity, conditional follow-up note validation, and attachment references.
-2. **Definitive Ticket Lifecycle & Advisory Resolution Gate:** Backend enforcement of the 8-status transition matrix (`NEW`, `OPEN`, `IN_PROGRESS`, `WAITING_FOR_REQUESTER`, `RESOLVED`, `CLOSED`, `REOPENED`, `CANCELLED`). Requester satisfaction flags remain strictly advisory, ensuring IT Staff retain sole authority over formal ticket closure.
-3. **Optimistic Concurrency Control (OCC):** Stale update detection via entity versioning returning HTTP 409 Conflict with an accessible UI warning banner and refresh button.
-4. **Authoritative Role-Based Dashboards:** Direct database aggregation endpoints (`GET /api/dashboard/staff`, `/requester`, `/admin`) providing real-time metric cards, priority breakdowns, drill-down links to filtered queues, and graceful zero/empty states.
-5. **Full System Hardening & Accessibility Polish (WCAG 2.1 AA):** 100% automated test pass rate across 97 backend and frontend tests, keyboard Escape modal handlers, visible focus rings, non-color semantic indicators, and responsive layouts.
+Development strictly followed the staged integration workflow where each issue was developed on an isolated feature branch (`feature/lab4-issue-1-spec` through `feature/lab4-issue-6-hardening`), reviewed and approved by peer reviewer `Ponatinylilbug`, merged into `lab4-staging`, and finally released into `main` via PR #45.
 
----
+![Figure 1.1: GitHub Network graph - feature branches merged into lab4-staging, then into main.](./screenshots/fig_1_1_network_graph.png)
+*Figure 1.1: GitHub Network graph - feature branches merged into lab4-staging, then into main.*  
+*Note: GitHub's Network graph had not refreshed at the time of capture*
 
-## Answer Part 1: Git Use with Engineering Workflow (10 Points)
+### 1.2 GitHub Project/Kanban
 
-### 1.1 Branch & Staged Integration Strategy
+All 6 Sprint 4 issues (#33–#38) were tracked on the GitHub Project Kanban board and successfully transitioned to **Done**.
 
-Development strictly followed the established team engineering workflow:
+![Figure 1.2: Project board - all Sprint 4 Issues in Done.](./screenshots/fig_1_2_kanban.png)
+*Figure 1.2: Project board - all Sprint 4 Issues in Done.*
 
-- **Base Branch:** `lab4-staging` branched from `main` — ใช้เป็น integration branch สำหรับ Sprint 4 ทั้งหมด
-- **Feature Branches:** แต่ละ GitHub Issue ถูกพัฒนาบน feature branch แยกกัน (`feature/lab4-issue-1-spec` ถึง `feature/lab4-issue-6-hardening`) เพื่อแยก scope ของงานออกจากกันอย่างชัดเจน
-- **Peer Review Gate:** ทุก Pull Request ต้องผ่านการ review และ approval จาก **จินจุฑา นันนฤมิตร (`Ponatinylilbug`)** ก่อนที่จะ merge เข้า `lab4-staging` ซึ่งรับรองว่าโค้ดทุกชิ้นผ่านการตรวจสอบคุณภาพ
-- **Final Release Merge:** หลังจาก 6 issues ผ่านการ verify ทั้งหมดแล้ว `lab4-staging` ถูก merge เข้า `main` ผ่าน PR #45
+### 1.3 reviewer.md
 
-### 1.2 Pull Request Review Log
+**Link :** [https://github.com/aranedlek/toctickit/blob/main/docs/lab-04/reviewer.md](https://github.com/aranedlek/toctickit/blob/main/docs/lab-04/reviewer.md)
 
-| PR # | Branch | Issue Scope | Reviewer | Decision | Merge Commit |
-| :---: | :--- | :--- | :---: | :---: | :---: |
-| **#39** | `feature/lab4-issue-1-spec` | Issue #1: Engineering Contract Specification & Test Plan | `Ponatinylilbug` | **Approved & Merged ✅** | `42ff9e2` |
-| **#40** | `feature/lab4-issue-2-actions-foundation` | Issue #2: Actions Taken Database Model & REST APIs | `Ponatinylilbug` | **Approved & Merged ✅** | `afee134` |
-| **#41** | `feature/lab4-issue-3-actions-ui` | Issue #3: Actions Taken UI & Accessible Modal | `Ponatinylilbug` | **Approved & Merged ✅** | `1d6a93f` |
-| **#42** | `feature/lab4-issue-4-ticket-workflow` | Issue #4: Ticket Lifecycle Matrix & Resolution Gate | `Ponatinylilbug` | **Approved & Merged ✅** | `937eaf5` |
-| **#43** | `feature/lab4-issue-5-dashboards` | Issue #5: Authoritative Role-Based Dashboards | `Ponatinylilbug` | **Approved & Merged ✅** | `f2c512a` |
-| **#44** | `feature/lab4-issue-6-hardening` | Issue #6: Final Regression, Accessibility & Hardening | `Ponatinylilbug` | **Approved & Merged ✅** | `f44c34a` |
+*Figure 1.3: Rendered docs/lab-04/reviewer.md - reviewer identity and PR links.*
 
-### 1.3 GitHub Project / Kanban Board
+| PR | Issue | Branch | Work | Reviewer Verdict |
+| :---: | :---: | :--- | :--- | :---: |
+| **#39** | #33 | `feature/lab4-issue-1-spec` | Sprint 4 engineering contract (specification, tests, UI/API specs) | Approved ✅ |
+| **#40** | #34 | `feature/lab4-issue-2-actions-foundation` | Actions Taken foundation: ActionTaken model, seed, REST APIs | Approved ✅ |
+| **#41** | #35 | `feature/lab4-issue-3-actions-ui` | Actions Taken UI on Ticket Details: list, modal, role restrictions | Approved ✅ |
+| **#42** | #36 | `feature/lab4-issue-4-ticket-workflow` | Ticket workflow: resolution gate, status history, optimistic concurrency control | Approved ✅ |
+| **#43** | #37 | `feature/lab4-issue-5-dashboards` | Requester and IT Staff Dashboards: backend aggregations, drill-down links | Approved ✅ |
+| **#44** | #38 | `feature/lab4-issue-6-hardening` | Regression & performance tests (97 tests), accessibility polish, documentation | Approved ✅ |
 
-ทุก 6 Issues ของ Sprint 4 (#33–#38) ถูก track บน GitHub Project Kanban board และเปลี่ยนสถานะไปเป็น **Done** ครบถ้วน บันทึกการ review ทั้งหมดสามารถดูได้ที่ [`docs/lab-04/reviewer.md`](https://github.com/aranedlek/toctickit/blob/main/docs/lab-04/reviewer.md)
+### 1.4 README and .gitignore
 
-### 1.4 Repository Structure
+*Figure 1.6: Rendered README.md (Tech stack, Repository structure, Setup, Seeded accounts, Demo, Rolling back, Testing, Environment)*
 
-โครงสร้าง Repository เป็นไปตามที่ Handout Section 12 กำหนด:
+*Figure 1.7: .gitignore*
 
-- `docs/lab-04/`: `specification.md`, `tests.md`, `ui-spec.md`, `api-spec.md`, `reviewer.md`, `ai-use.md`
-- `server/tests/lab-04/`: `actions-taken.api.test.ts`, `ticket-workflow.api.test.ts`, `requester-dashboard.api.test.ts`, `staff-dashboard.api.test.ts`
-- `server/tests/lab-03/`: `regression.api.test.ts` (ทดสอบ regression จาก Lab 1–3)
-- `frontend/src/tests/lab-04/`: `StaffDashboard.test.tsx`, `RequesterDashboard.test.tsx`, `ActionsTaken.test.tsx`, `TicketWorkflow.test.tsx`
-- `e2e/lab-04/`: `actions-taken-flow.spec.ts`, `ticket-resolution.spec.ts`, `dashboards.spec.ts`
+### 1.5 Repository Structure
+
+Lab 4 artifacts are organized in dedicated `lab-04` folders separated by purpose: specifications and review records in `docs/lab-04`, backend API/integration tests in `backend/tests/lab-04`, frontend UI tests in `frontend/src/tests/lab-04`, end-to-end tests in `e2e/lab-04`, and UI evidence in `docs/lab-04/screenshots`.
+
+*Figure 1.8: Repository directory structure*
 
 ---
 
-## Answer Part 2: Spec DD — Specification-Driven Development (5 Points)
+## Answer Part 2: Spec DD
 
-- **Specification Document:** [docs/lab-04/specification.md](https://github.com/aranedlek/toctickit/blob/main/docs/lab-04/specification.md)
-- **API Specification:** [docs/lab-04/api-spec.md](https://github.com/aranedlek/toctickit/blob/main/docs/lab-04/api-spec.md)
-- **UI Specification:** [docs/lab-04/ui-spec.md](https://github.com/aranedlek/toctickit/blob/main/docs/lab-04/ui-spec.md)
+### 2.1 rendered docs/lab-04/specification.md
 
-### 2.1 Key Specifications Defined Prior to Coding
+**Link :** [https://github.com/aranedlek/toctickit/blob/main/docs/lab-04/specification.md](https://github.com/aranedlek/toctickit/blob/main/docs/lab-04/specification.md)
 
-เอกสาร Specification ถูกเขียนและ commit ก่อนเริ่มพัฒนาโค้ด (มีหลักฐานจาก PR #39 ที่ merge ก่อน PR อื่นทั้งหมด) ประกอบด้วย:
+#### 2.1.1 Functional Requirements
+*Figure 2.1.1: Functional Requirements (FR-01 – FR-25)*
 
-1. **Functional Requirements (FR-01 to FR-09):** ครอบคลุม Actions Taken CRUD, read-only permissions สำหรับ Requesters, state machine transitions, formal resolution gate, OCC version checking, role dashboards, และ system-wide regression
-2. **Business Rules (BR-01 to BR-13):**
-   - *BR-01 to BR-06 (Actions Taken):* One-to-Many Ticket association, performer autonomy independent of ticket owner, mandatory description & result, conditional mandatory follow-up note when `followUpRequired=true`, requester read-only enforcement, inactive staff rejection
-   - *BR-07 to BR-10 (Lifecycle & OCC):* 8 valid statuses, permitted transition matrix with role restrictions, requester advisory resolution gate, integer version checking returning HTTP 409 Conflict
-   - *BR-11 to BR-13 (Dashboards):* Authoritative backend Prisma aggregation, strict requester data isolation (`WHERE requesterId = :authUserId`), graceful zero-metric empty states
-3. **Database Design Decisions Justification:**
-   - *Dedicated `ActionTaken` Table vs Reusing `InternalNote`:* Actions Taken เป็น auditable operational work records ที่มี metadata fields เฉพาะตัว (`actionDateTime`, `result`, `performedById`, `followUpRequired`) การรวมเข้ากับ free-form staff notes จะละเมิด Single Responsibility Principle และทำให้ queries ซับซ้อนขึ้น
-   - *Optimistic Concurrency Control via `version` Field:* Integer versioning ช่วยขจัดปัญหา lost-update hazards ระหว่างการทำงานพร้อมกันของ staff/user โดยไม่เสี่ยงต่อ deadlock ที่เกิดจาก pessimistic database locks
-4. **Acceptance Criteria (AC-01 to AC-10):** เงื่อนไขที่สังเกตและทดสอบได้ เชื่อมโยงตรงกับ automated tests
-5. **Pre-Implementation Verification:** เอกสาร specification ถูก commit และ merge ใน PR #39 (`42ff9e2`) ก่อนการพัฒนาฟีเจอร์ทั้งหมด
+#### 2.1.2 Business Rules
+*Figure 2.1.2a: Actions Taken rules (BR-01 – BR-11)*  
+*Figure 2.1.2b: Ticket workflow and stale update rules (BR-12 – BR-18)*  
+*Figure 2.1.2c: Authorization matrix*  
+*Figure 2.1.2d: Final Ticket transition matrix*  
+*Figure 2.1.2e: Dashboard rules and calculations (BR-19 – BR-24)*  
+*Figure 2.1.2f: Data, testing, and general rules (BR-25 – BR-30)*  
 
----
+#### 2.1.3 Migration Decisions
+*Figure 2.1.3: Data changes, design decisions, and migration and recovery*
 
-## Answer Part 3: Test DD and Traceability (10 Points)
+#### 2.1.4 Acceptance Criteria
+*Figure 2.1.4: Acceptance Criteria (AC-01 – AC-35)*
 
-- **Test Plan Document:** [docs/lab-04/tests.md](https://github.com/aranedlek/toctickit/blob/main/docs/lab-04/tests.md)
-- **Test Results:** การรันเทสทั้งหมดผ่าน 100% (97/97 tests)
+#### 2.1.5 Definition of Done
+*Figure 2.1.5: Product Definition of Done*
 
-### 3.1 Backend API Tests (Vitest) — 64 tests, 11 files
-
-| Test File | Tests | Description | Status |
-| :--- | :---: | :--- | :---: |
-| `actions-taken.api.test.ts` | 12 | Create, Read, Update Actions Taken + permission checks | ✅ Passed |
-| `ticket-workflow.api.test.ts` | 10 | Status transitions, advisory resolution, OCC conflict | ✅ Passed |
-| `requester-dashboard.api.test.ts` | 8 | Requester metrics, data isolation, zero states | ✅ Passed |
-| `staff-dashboard.api.test.ts` | 8 | Staff aggregation, priority breakdown, drill-down links | ✅ Passed |
-| `regression.api.test.ts` | 6 | Lab 1–3 endpoint regression (Auth, Notes, Users) | ✅ Passed |
-| `auth.test.ts` | 6 | Login, invalid credentials, inactive account, password change | ✅ Passed |
-| `authorization.test.ts` | 2 | Ownership enforcement, Requester rejected from notes | ✅ Passed |
-| `notes.test.ts` | 2 | Public comments and internal notes | ✅ Passed |
-| `tickets.test.ts` | 4 | Ticket CRUD and search/filter/sort | ✅ Passed |
-| `users.test.ts` | 3 | User management, duplicate email, self-deactivation | ✅ Passed |
-| `categories.test.ts` | 3 | Category and system management | ✅ Passed |
-
-### 3.2 Frontend Component Tests (Vitest) — 33 tests, 9 files
-
-| Test File | Tests | Description | Status |
-| :--- | :---: | :--- | :---: |
-| `ActionsTaken.test.tsx` | 8 | List rendering, modal open/close, form validation, role visibility | ✅ Passed |
-| `TicketWorkflow.test.tsx` | 6 | Status dropdown restrictions, conflict banner, refresh button | ✅ Passed |
-| `StaffDashboard.test.tsx` | 5 | Metric cards, priority breakdown, drill-down navigation | ✅ Passed |
-| `RequesterDashboard.test.tsx` | 5 | Personal metrics, zero state, quick action buttons | ✅ Passed |
-| Other Lab 1–3 component tests | 9 | Login, TicketQueue, TicketDetail, UserManagement regression | ✅ Passed |
-
-### 3.3 Traceability Matrix (AC to Test Mapping)
-
-| Requirement / AC | Test ID | Description | Automated Test File | Result |
-| :--- | :---: | :--- | :--- | :---: |
-| **AC-01 / BR-03** | API-01 | Create valid Action Taken by IT Staff | `actions-taken.api.test.ts` | ✅ |
-| **BR-04** | API-02 | Reject action when `followUpRequired=true` but note empty | `actions-taken.api.test.ts` | ✅ |
-| **AC-03 / BR-05** | API-03 | Reject Requester mutating Action Taken (403) | `actions-taken.api.test.ts` | ✅ |
-| **AC-04** | API-04 | Requester views Actions Taken for own ticket | `actions-taken.api.test.ts` | ✅ |
-| **AC-04** | API-05 | Requester forbidden from other user's actions | `actions-taken.api.test.ts` | ✅ |
-| **BR-02** | API-06 | Non-owner IT Staff member logs Action Taken | `actions-taken.api.test.ts` | ✅ |
-| **BR-08** | API-07 | Valid status transition `OPEN` -> `IN_PROGRESS` | `ticket-workflow.api.test.ts` | ✅ |
-| **AC-07 / BR-08** | API-08 | Reject illegal status jump `NEW` -> `RESOLVED` (422) | `ticket-workflow.api.test.ts` | ✅ |
-| **BR-09** | API-09 | Reject Requester setting ticket status to `RESOLVED` (403) | `ticket-workflow.api.test.ts` | ✅ |
-| **BR-09** | API-10 | Requester submits advisory resolution (200) | `ticket-workflow.api.test.ts` | ✅ |
-| **AC-08 / BR-10** | API-11 | Concurrent update with stale version returns 409 | `ticket-workflow.api.test.ts` | ✅ |
-| **AC-06 / BR-12** | API-12 | Requester Dashboard metrics strictly isolated | `requester-dashboard.api.test.ts` | ✅ |
-| **AC-05 / BR-11** | API-13 | IT Staff Dashboard metrics match DB aggregation | `staff-dashboard.api.test.ts` | ✅ |
-| **BR-13** | API-14 | Graceful zero counts when user has 0 tickets | `requester-dashboard.api.test.ts` | ✅ |
-| **FR-09** | API-15 | Regression of Lab 1–3 endpoints (Auth, Notes, Users) | `regression.api.test.ts` | ✅ |
-| **AC-01 / UI-01** | UI-01 | Actions Taken list rendering on Ticket Detail | `ActionsTaken.test.tsx` | ✅ |
-| **BR-04 / UI-02** | UI-02 | Modal conditional follow-up note validation | `ActionsTaken.test.tsx` | ✅ |
-| **AC-03 / UI-03** | UI-03 | Requester view hides action creation controls | `ActionsTaken.test.tsx` | ✅ |
-| **AC-05 / UI-04** | UI-04 | IT Staff Dashboard metric cards & drill-downs | `StaffDashboard.test.tsx` | ✅ |
-| **AC-06 / UI-05** | UI-05 | Requester Dashboard metrics & quick actions | `RequesterDashboard.test.tsx` | ✅ |
-| **AC-08 / UI-06** | UI-06 | Concurrency conflict banner with refresh button | `TicketWorkflow.test.tsx` | ✅ |
-| **AC-01** | E2E-01 | Full IT Staff Action Taken flow | `actions-taken-flow.spec.ts` | ✅ |
-| **BR-09** | E2E-02 | Requester advisory resolution & staff verification | `ticket-resolution.spec.ts` | ✅ |
-| **AC-05** | E2E-03 | IT Staff Dashboard navigation & drill-down | `dashboards.spec.ts` | ✅ |
-| **AC-06** | E2E-04 | Requester Dashboard navigation & shortcuts | `dashboards.spec.ts` | ✅ |
-
-### 3.4 Automated Test Execution Summary
-
-- **Backend Test Suite (Vitest):** **64 tests passed** across 11 test files (Duration: 2.17s)
-- **Frontend Test Suite (Vitest):** **33 tests passed** across 9 test files (Duration: 6.84s)
-- **Total Automated Test Suites:** **97 / 97 Tests Passing (100% Pass Rate) ✅**
+### 2.2 Specification Before Implementation
+*Figure 2.2: specification.md commit history - "Lab 4 spec" committed 2026-10-31 20:07 and merged in PR #39 at 20:15, before the first implementation PR #40 (20:57).*
 
 ---
 
-## Answer Part 4: AI Use with Reflection (5 Points)
+## Answer Part 3: Test DD and Traceability
 
-- **AI Log:** [docs/lab-04/ai-use.md](https://github.com/aranedlek/toctickit/blob/main/docs/lab-04/ai-use.md)
-- **AI Models Used:** Antigravity IDE / Gemini 3.8 Flash (High)
+### 3.1 Rendered docs/lab-04/tests.md
 
-### 4.1 Key Prompts & AI Actions Summary
+**Link :** [https://github.com/aranedlek/toctickit/blob/main/docs/lab-04/tests.md](https://github.com/aranedlek/toctickit/blob/main/docs/lab-04/tests.md)
 
-| Prompt # | Task Description | AI Actions |
-| :---: | :--- | :--- |
-| 1 | Handout analysis & Sprint planning | วิเคราะห์ handout, แตก 6 issues, กำหนด requirements และ 9 report parts |
-| 2 | GitHub remote connectivity | ตรวจสอบ repository, ตั้งค่า remote, ยืนยัน branch structure |
-| 3 | Issue 1: Sprint Contract | สร้าง `docs/lab-04/` specification, API spec, UI spec, test plan |
-| 4 | Issue 2: Actions Taken Foundation | ออกแบบ Prisma schema, migration, idempotent seed data, REST APIs |
-| 5 | Issue 3: Actions Taken UI | สร้าง `ActionsTakenSection` component, Zen Green styling, accessible modal |
-| 6 | Issue 4: Ticket Lifecycle | Implement transition matrix, advisory resolution gate, OCC conflict banner |
-| 7 | Issue 5: Role-Based Dashboards | สร้าง Prisma aggregation queries, dashboard components, empty states |
-| 8 | Issue 6: Final Hardening | Regression testing (97 tests), WCAG 2.1 AA keyboard polish, E2E suites |
+#### 3.1.1 Test Strategy
+*Figure 3.1.1: Test strategy - test types, tools, and test files per Issue*
 
-### 4.2 My Reflection on Specification and Coding Agent Use
+#### 3.1.2 Planned Tests
+*Figure 3.1.2a: Unit tests (UNIT-01 – UNIT-04)*  
+*Figure 3.1.2b: API and authorization tests - Actions Taken (API-01 – API-06)*  
+*Figure 3.1.2c: Workflow and stale update tests (FLOW-01 – FLOW-05)*  
+*Figure 3.1.2d: API tests - dashboards and filters (API-10 – API-14)*  
+*Figure 3.1.2e: Migration, regression, and performance tests (MIG-01 – MIG-02, REG-01 – REG-04, PERF-01)*  
+*Figure 3.1.2f: UI component and UI style tests (UI-01 – UI-09)*  
+*Figure 3.1.2g: Responsive and end-to-end tests (RESP-01 – RESP-02, E2E-01 – E2E-04)*  
 
-การทำงานร่วมกับ AI Specification Agent ช่วยเปลี่ยนกระบวนการพัฒนาของเราอย่างมาก โดยช่วยให้ทีมแก้ไขข้อจำกัดทางสถาปัตยกรรมที่ละเอียดอ่อนได้ก่อนเริ่มเขียนโค้ด
+#### 3.1.3 Acceptance Criterion Traceability
+*Figure 3.1.3: Acceptance Criterion traceability (AC-01 – AC-35)*
 
-โดยเฉพาะอย่างยิ่ง:
-- การทำให้ข้อกำหนดที่ว่า Requester resolution เป็นแค่ advisory (BR-09) ชัดเจนขึ้น ป้องกันไม่ให้เกิดการออกแบบผิดพลาดที่อาจอนุญาตให้ Requester ปิด ticket ได้โดยตรง
-- การกำหนด mandatory follow-up notes เมื่อ `followUpRequired=true` (BR-04) ทำให้ validation logic ถูกต้องตั้งแต่แรก
-- การออกแบบ Optimistic Concurrency Control (BR-10) ช่วยป้องกัน severe architectural rework ที่อาจเกิดขึ้นถ้าเลือกใช้ pessimistic locking
+#### 3.1.4 Final Results
+*Figure 3.1.4: Final results - 64 backend tests + 33 frontend tests = 97 tests passed 100%*
 
-Pair programming กับ Coding Agent ช่วยให้สามารถทำ rigorous Test-Driven Development (TDD) ได้ สร้าง test assertions ที่ครอบคลุม และรักษา 100% test pass rate ตลอดการพัฒนา ข้อดีคือ AI สามารถ generate test boilerplate ได้รวดเร็ว แต่ต้องตรวจสอบ test logic ให้ถูกต้องเสมอ
-
----
-
-## Answer Part 5: Working IT Staff Dashboard UI (5 Points)
-
-IT Staff Dashboard (`/staff/dashboard`) ให้ operational visibility เข้าสู่ service desk queue ทั้งหมด:
-
-### 5.1 Metric Cards
-
-Dashboard แสดง 5 Operational Metric Cards ที่ update real-time:
-- **Unassigned Tickets:** จำนวนตั๋วที่ยังไม่มี owner — แสดงงานที่ต้อง claim
-- **Open Tickets:** จำนวนตั๋วสถานะ OPEN ที่รอดำเนินการ
-- **In Progress:** จำนวนตั๋วที่กำลังดำเนินการอยู่
-- **Waiting on User:** จำนวนตั๋วที่รอ response จาก Requester
-- **My Assigned:** จำนวนตั๋วที่ assign ให้ IT Staff คนนั้นโดยเฉพาะ
-
-### 5.2 Authoritative Backend Aggregation
-
-ตัวเลขทั้งหมดมาจาก backend Prisma queries (`GET /api/dashboard/staff`) โดยใช้ database `count` operations โดยตรง ไม่ใช่การนับจาก client-side array filtering ซึ่งรับประกันความถูกต้องแม้มีข้อมูลจำนวนมาก
-
-### 5.3 Interactive Drill-Downs & Priority Breakdown
-
-- แต่ละ card มีลิงก์ "View queue →" ที่นำทางไปยัง `/staff/tickets` พร้อม pre-filter ตาม status หรือ assignee
-- **Priority Breakdown Chart:** แสดงจำนวน tickets แยกตาม priority (🔴 Urgent, 🟠 High, 🟡 Medium, 🟢 Low) ช่วยให้ IT Staff จัดลำดับความสำคัญของงานได้
-- **Recent Active Tickets Table:** ตารางแสดงตั๋วล่าสุดพร้อมสถานะ, priority, requester name, และวันที่สร้าง
-
-### IT Staff Dashboard Screen
-![IT Staff Dashboard](./screenshots/staff-dashboard.png)
+### 3.2 Passing Test Output from main
+*Figure 3.2.1: Server test output (cd backend && npm test) - 64 passed (100%)*  
+*Figure 3.2.2: Client test output (cd frontend && npm test) - 33 passed (100%)*  
+*Figure 3.2.3: Playwright E2E output (npx playwright test)*  
 
 ---
 
-## Answer Part 6: Working Actions Taken UI (10 Points)
+## Answer Part 4: AI Use with Reflection
 
-Actions Taken interface ถูกรวมเข้ากับ Ticket Detail screen (`/staff/tickets/:id`) โดยตรง:
+### 4.1 ai-use.md
 
-### 6.1 Structured Work Logging
-
-ฟอร์มบันทึก Action Taken ประกอบด้วยฟิลด์:
-- **Date/Time:** วันที่และเวลาของการดำเนินการ (default เป็นเวลาปัจจุบัน)
-- **Action Description:** รายละเอียดของการดำเนินการ (mandatory)
-- **Result:** ผลลัพธ์ที่ได้ (mandatory)
-- **Performed By:** ระบุอัตโนมัติจากผู้ใช้ที่ login อยู่ (auto-bound to logged-in user) ไม่สามารถแก้ไขได้
-- **Follow-Up Required Toggle:** สวิตช์ระบุว่าต้องมีการติดตามผลหรือไม่
-- **Attachment Notes:** หมายเหตุเพิ่มเติมเกี่ยวกับไฟล์แนบ (optional)
-
-### 6.2 Conditional Follow-up Validation (BR-04)
-
-เมื่อเปิดสวิตช์ `followUpRequired=true` ระบบจะ**บังคับ**ให้กรอก `followUpNote` ที่ไม่ว่างเปล่า:
-- ถ้า toggle เป็น ON แต่ไม่กรอก follow-up note → แสดง validation error "Follow-up note is required" และ block การ submit
-- ถ้า toggle เป็น OFF → follow-up note เป็น optional
-- Backend validation ซ้ำอีกชั้นเพื่อป้องกัน direct API calls ที่ bypass UI validation
-
-### 6.3 Role Permissions (BR-05)
-
-- **IT Staff & Administrator:** มีสิทธิ์เต็มรูปแบบ — เห็นปุ่ม "+ Record Action Taken", สามารถสร้าง/แก้ไข Actions ได้
-- **Requester:** มี read-only audit view — เห็นรายการ Actions Taken ที่บันทึกไว้แล้วเท่านั้น ไม่เห็นปุ่ม "+ Record Action Taken" หรือ Edit controls ใดๆ ช่วยให้ Requester ติดตามความคืบหน้าได้โดยไม่สามารถแก้ไขข้อมูลการทำงาน
-
-### 6.4 Accessible Modal Dialog (WCAG 2.1 AA)
-
-Modal สำหรับบันทึก Action Taken ออกแบบตาม WCAG 2.1 AA:
-- `role="dialog"`, `aria-modal="true"`, `aria-labelledby` เชื่อมกับ title
-- กดปุ่ม <kbd>Escape</kbd> เพื่อปิด modal ได้ (keyboard Escape handler)
-- Focus trap ภายใน modal — Tab key จะวนอยู่ภายใน modal เท่านั้น
-- `:focus-visible` styling บน input fields และ buttons ทั้งหมด
-
-### Ticket Detail Actions Taken Section
-![Ticket Detail Actions Taken](./screenshots/ticket-detail-actions.png)
-
-### Accessible Record Action Taken Modal
-![Record Action Taken Modal](./screenshots/actions-taken-modal.png)
+*Figure 4.1: Rendered ai-use.md with the LLM used, key prompts, and reflection*
 
 ---
 
-## Answer Part 7: Working Ticket Workflow (5 Points)
+## Answer Part 5: Working IT Staff Dashboard UI
 
-ระบบ Ticket Workflow บังคับใช้ lifecycle rules อย่างเข้มงวดทั้งฝั่ง backend และ frontend:
+### 5.1 IT Staff Dashboard
+![Figure 5.1: IT Staff Dashboard (IT Staff One / Priya Nair)](./screenshots/fig_5_1_staff_dashboard.png)  
+*Figure 5.1: IT Staff Dashboard (IT Staff One / Priya Nair)*
 
-### 7.1 Permitted Status Transition Matrix (BR-08)
+### 5.2 Drill-down
+![Figure 5.2: Drill-down - clicking "Unassigned" opens the Ticket Queue filtered to unassigned active Tickets](./screenshots/fig_5_2_drilldown.png)  
+*Figure 5.2: Drill-down - clicking "Unassigned" opens the Ticket Queue filtered to unassigned active Tickets*
 
-ระบบกำหนด 8 สถานะ และจำกัดการเปลี่ยนสถานะตาม matrix ดังนี้:
+### 5.3 Loading State
+*Figure 5.3: Loading state - "Loading dashboard..."*
 
-| From Status | Allowed Transitions |
-| :--- | :--- |
-| `NEW` | `OPEN`, `CANCELLED` |
-| `OPEN` | `IN_PROGRESS`, `WAITING_FOR_REQUESTER`, `CANCELLED` |
-| `IN_PROGRESS` | `OPEN`, `WAITING_FOR_REQUESTER`, `RESOLVED`, `CANCELLED` |
-| `WAITING_FOR_REQUESTER` | `IN_PROGRESS`, `OPEN` |
-| `RESOLVED` | `CLOSED`, `REOPENED` |
-| `REOPENED` | `IN_PROGRESS`, `CANCELLED` |
-| `CLOSED` | (Terminal — no transitions allowed) |
-| `CANCELLED` | (Terminal — no transitions allowed) |
+### 5.4 Empty State
+*Figure 5.4: Empty state (Elena Rossi / IT Staff) - "You have no open actions."*
 
-- **UI Enforcement:** Status dropdown จะแสดงเฉพาะสถานะที่เปลี่ยนได้ตาม matrix เท่านั้น ป้องกันไม่ให้ผู้ใช้เลือกสถานะที่ไม่ถูกต้อง
-- **Backend Enforcement:** ถ้ามีการส่ง status ที่ไม่อนุญาตจะ return HTTP 422 Unprocessable Entity พร้อม error message
+### 5.5 Forbidden
+*Figure 5.5: Forbidden - a Requester calling /api/staff/dashboard receives 403. (Requester = Jennifer Anderson / Aran Edlek)*
 
-### 7.2 Advisory Resolution Gate (BR-09)
+### 5.6 Safe Failure
+*Figure 5.6: Safe failure - "Unable to load the dashboard." with Retry when the API is unavailable.*
 
-- **Requester:** สามารถคลิกปุ่ม advisory resolution (`POST /api/tickets/:id/resolve-advisory`) เพื่อแจ้งว่าปัญหาได้รับการแก้ไขแล้ว — เป็นเพียง **advisory flag** ที่บันทึกความพึงพอใจ
-- **IT Staff:** มีอำนาจเด็ดขาดในการเปลี่ยนสถานะเป็น `RESOLVED` หรือ `CLOSED` อย่างเป็นทางการ
-- Requester **ไม่สามารถ** เปลี่ยนสถานะ ticket เป็น `RESOLVED` ได้โดยตรง (return 403 Forbidden)
+### 5.7 Responsive Behavior
+![Figure 5.7a: IT Staff Dashboard on tablet (768 × 1024)](./screenshots/fig_5_7a_staff_tablet.png)  
+*Figure 5.7a: IT Staff Dashboard on tablet (768 × 1024)*
 
-### 7.3 Optimistic Concurrency Control (BR-10 / UI-06)
+![Figure 5.7b: IT Staff Dashboard on mobile (375 × 812)](./screenshots/fig_5_7b_staff_mobile.png)  
+*Figure 5.7b: IT Staff Dashboard on mobile (375 × 812)*
 
-ป้องกัน stale overwrite hazards เมื่อมีหลายคนทำงานกับ ticket เดียวกันพร้อมกัน:
-
-- ทุก ticket มี `version` field (integer) ที่เพิ่มขึ้นทุกครั้งที่มีการ update
-- เมื่อ client ส่ง update request ต้องแนบ `version` ที่ตนมีอยู่
-- ถ้า `version` ไม่ตรงกับ database (มีคนอื่น update ไปก่อนแล้ว) → return **HTTP 409 Conflict**
-- UI แสดง **yellow warning banner** พร้อมข้อความ "This ticket has been modified by another user" และปุ่ม **Refresh** เพื่อโหลดข้อมูลล่าสุด
-
-### Ticket Workflow Controls & Resolution Options
-![Ticket Workflow](./screenshots/working-ticket-workflow.png)
+### 5.8 Metrics Match Database
+*Figure 5.8: SQL query results matching the dashboard counts.*
 
 ---
 
-## Answer Part 8: Working Requester Dashboard and Final Regression UI (5 Points)
+## Answer Part 6: Working Actions Taken UI
 
-### 8.1 Requester Dashboard (`/requester/dashboard`)
+### 6.1 Actions Taken List
+![Figure 6.1: Actions Taken on TKT-2026-900003](./screenshots/fig_6_1_actions_list.png)  
+*Figure 6.1: Actions Taken on TKT-2026-900003 - different actions with Completed, In Progress, and Cancelled statuses.*
 
-Dashboard ส่วนตัวของ Requester แสดงสถานะตั๋วที่ตนเองสร้าง:
+### 6.2 Create and Assign
+*Figure 6.2.1: View action taken*
 
-- **Strict Data Isolation (BR-12):** Backend queries filter อย่างเข้มงวดด้วย `WHERE requesterId = :authUserId` — Requester เห็นเฉพาะตั๋วของตัวเองเท่านั้น ไม่สามารถเห็นตั๋วของ Requester คนอื่นได้
-- **Personalized Metrics:** แสดง 4 metric cards:
-  - **My Open Requests:** จำนวนตั๋วสถานะ OPEN / NEW ของตนเอง
-  - **In Progress:** จำนวนตั๋วที่กำลังดำเนินการ
-  - **Waiting on Me:** จำนวนตั๋วที่รอ response จากตนเอง (WAITING_FOR_REQUESTER)
-  - **Recently Resolved:** จำนวนตั๋วที่เพิ่ง resolve ภายใน 7 วัน
-- **Quick Actions:** ปุ่มลัด "Submit a New Request" สำหรับสร้างตั๋วใหม่โดยตรงจาก Dashboard
+![Figure 6.2.2: Add Action form](./screenshots/fig_6_2_2_add_modal.png)  
+*Figure 6.2.2: Add Action form - a new action assigned to Elena Rossi.*
 
-### 8.2 Graceful Zero/Empty State (BR-13)
+### 6.3 Edit
+*Figure 6.3: Edit Action - changing the description of an open action.*
 
-เมื่อ Requester ยังไม่มีตั๋วเลย (ผู้ใช้ใหม่หรือไม่เคยสร้างตั๋ว):
-- ตัวเลขทุก metric card แสดง "0" อย่างถูกต้อง (ไม่ error หรือแสดง NaN)
-- แสดง empty state card พร้อมข้อความ "No tickets yet" และปุ่ม "Submit a New Request" เพื่อให้ user experience ดีแม้ไม่มีข้อมูล
+### 6.4 Status Transition
+*Figure 6.4: Start - action status changes from Planned to In Progress.*
 
-### Requester Dashboard Screen
-![Requester Dashboard](./screenshots/requester-dashboard.png)
+### 6.5 Complete
+*Figure 6.5: Complete - action status changes to Completed and becomes read-only.*
 
-### 8.3 Full System Regression Evidence (FR-09)
+### 6.6 Cancel
+*Figure 6.6: Cancel - confirmation dialog, then action status changes to Cancelled.*
 
-ฟีเจอร์ทั้งหมดจาก Lab 1 ถึง Lab 3 ยังคงทำงานได้อย่างสมบูรณ์โดยไม่มี regression:
-- ✅ **User Authentication:** Login/Logout ด้วย email/password, JWT token management
-- ✅ **Mandatory First-Login Password Change:** บังคับเปลี่ยนรหัสผ่านครั้งแรก
-- ✅ **Requester Ticket Submission:** สร้างตั๋วใหม่ พร้อม multi-file attachment management
-- ✅ **Public Comments vs. Confidential Internal Notes:** Dual-thread communication ทำงานถูกต้อง
-- ✅ **IT Staff Ticket Queue:** Search, multi-filter, sorting, pagination ทำงานครบถ้วน
-- ✅ **Administrator User Management:** Role assignment, active toggle, password reset ทำงานปกติ
-- ✅ **Regression Test Suite:** 6 regression tests ผ่านครบ ยืนยันว่าไม่มี breaking changes
+### 6.7 Validation
+![Figure 6.7: Validation errors shown under the required fields](./screenshots/fig_6_7_validation.png)  
+*Figure 6.7: Validation errors shown under the required fields.*
+
+### 6.8 Inactive-assignee Rejection
+*Figure 6.8: Saving with an inactive assignee is rejected - "The assignee must be an active IT Staff or Administrator user."*
+
+### 6.9 Role Restrictions
+![Figure 6.9: Requester view - Actions Taken are read-only](./screenshots/fig_6_9_requester_actions_readonly.png)  
+*Figure 6.9: Requester view - Actions Taken are read-only, with no Add, Edit, or status buttons.*
+
+### 6.10 Safe Failure
+*Figure 6.10: Safe failure - "Unable to save. Please try again." with the typed values kept.*
+
+### 6.11 Responsive Behavior
+![Figure 6.11a: Actions Taken on tablet (768 × 1024)](./screenshots/fig_6_11a_actions_tablet.png)  
+*Figure 6.11a: Actions Taken on tablet (768 × 1024)*
+
+![Figure 6.11b: Actions Taken on mobile (375 × 812)](./screenshots/fig_6_11b_actions_mobile.png)  
+*Figure 6.11b: Actions Taken on mobile (375 × 812)*
 
 ---
 
-## Answer Part 9: Zen Green UI, Responsive, Accessibility, and Final Polish (5 Points)
+## Answer Part 7: Working Ticket Workflow
 
-- **UI Specification:** [docs/lab-04/ui-spec.md](https://github.com/aranedlek/toctickit/blob/main/docs/lab-04/ui-spec.md)
+### 7.1 Permitted Transitions
+![Figure 7.1: Status options for an In Progress Ticket](./screenshots/fig_7_1_status_options.png)  
+*Figure 7.1: Status options for an In Progress Ticket - only Open, Waiting for Requester, Resolved, and Cancelled are offered.*
 
-### 9.1 Design System — Zen Green Theme
+### 7.2 Resolution Gate
+*Figure 7.2: Resolving is blocked while the Ticket still has an open action.*
 
-การออกแบบทั้งหมดใช้ธีม **Zen Green** ผ่าน CSS Variables:
-- `--color-primary: #2D6A4F` — สีหลักของ headers, buttons, links
-- `--color-surface: #F0F7F4` — สีพื้นหลังของ cards, table headers
-- `--color-border: #D8F3DC` — สีเส้นขอบ, dividers, table borders
-- `--color-text: #1B4332` — สีข้อความหลัก
-- `--color-danger: #D32F2F` — สีแจ้งเตือน, error messages
-- `--color-warning: #F9A825` — สี conflict banner, warning states
-- ใช้ CSS Variables ทั่วทั้ง application เพื่อความสม่ำเสมอและง่ายต่อการปรับแต่ง
+### 7.3 Successful Transition
+*Figure 7.3a: Confirmation dialog - "Change status to Resolved?".*  
+*Figure 7.3b: Ticket status changed to Resolved after all actions are Completed or Cancelled.*
 
-### 9.2 Responsive Layouts
+### 7.4 Stable Ordering and Append-only History
+*Figure 7.4a: Status Timeline before the change.*  
+*Figure 7.4b: Status Timeline after the change - the new entry is added at the bottom and earlier entries stay unchanged, with no edit or delete buttons.*
 
-ระบบรองรับ responsive design ครบ 3 breakpoints:
+### 7.5 Role-appropriate Visibility
+![Figure 7.5: Requester view of the same Ticket](./screenshots/fig_7_5_requester_workflow_readonly.png)  
+*Figure 7.5: Requester view (Aran Edlek / Michael Brown) of the same Ticket - status, Actions Taken, and Status Timeline are visible but read-only, with no status controls.*
 
-- **Desktop (≥ 1024px):** Multi-column dashboard grid layout, ตาราง audit แบบเต็มความกว้าง, sidebar navigation
-- **Tablet (768–1023px):** Fluid two-column grid reflow — metric cards จัดเป็น 2 คอลัมน์ ตารางยังคงอ่านง่าย
-- **Mobile (< 768px):** Single-column stack — metric cards ซ้อนกันเป็นแถวเดียว, ตารางเลื่อนได้ในแนวนอน (horizontally scrollable), touch-friendly controls ขนาดปุ่มไม่ต่ำกว่า 44×44px
+---
 
-### Responsive — Tablet Layout (768px)
-![Responsive Tablet](./screenshots/responsive-tablet.png)
+## Answer Part 8: Working Requester Dashboard and Final Regression UI
 
-### Responsive — Mobile Layout (375px)
-![Responsive Mobile](./screenshots/responsive-mobile.png)
+### 8.1 Requester Dashboard
+![Figure 8.1: Requester Dashboard](./screenshots/fig_8_1_requester_dashboard.png)  
+*Figure 8.1: Requester Dashboard (Aran Edlek / Jennifer Anderson) - Open tickets, Waiting for me, Recently updated, and Recently resolved, counting only her own Tickets.*
 
-### 9.3 Accessibility Checklist (WCAG 2.1 AA)
+### 8.2 Drill-down
+![Figure 8.2: Drill-down - clicking "Open tickets"](./screenshots/fig_8_2_requester_drilldown.png)  
+*Figure 8.2: Drill-down - clicking "Open tickets" opens My Tickets filtered to her active Tickets, and the total matches the card.*
 
-- [x] **Keyboard Navigation:** Modal dialogs สามารถเปิดและปิดด้วย <kbd>Escape</kbd> — ทุก interactive element เข้าถึงด้วย Tab key ได้
-- [x] **Visible Focus Indicators:** `:focus-visible` styling ถูกใช้กับ buttons, links, และ form inputs ทั้งหมด (`outline: 2px solid var(--color-primary)`) เพื่อให้ผู้ใช้ keyboard เห็นว่า focus อยู่ที่ไหน
-- [x] **Non-Color Status Cues:** ทุก status และ priority badges มี semantic icons กำกับ (✅ Resolved, ⏳ In Progress, 🔒 Closed, 🆕 New, ⚠️ Waiting) เพื่อให้ผู้ใช้ที่ตาบอดสีสามารถแยกแยะสถานะได้โดยไม่ต้องพึ่งสีอย่างเดียว
-- [x] **ARIA Attributes:** Modal dialogs ใช้ `role="dialog"`, `aria-modal="true"`, `aria-labelledby` ครบถ้วน
-- [x] **Zero Console Errors:** Production bundle ถูกตรวจสอบด้วย `tsc -b && vite build` (zero errors) และ `oxlint` (zero errors)
+### 8.3 Ownership Protection
+*Figure 8.3: Ownership protection - Requester requesting another Requester's Ticket (/api/tickets/:id) receives 404.*
+
+### 8.4 Regression - Authentication
+![Figure 8.4: Login page](./screenshots/fig_8_4_login.png)  
+*Figure 8.4: Login page - signing in with a seeded account.*
+
+### 8.5 Regression - My Tickets
+![Figure 8.5: My Tickets list](./screenshots/fig_8_5_my_tickets.png)  
+*Figure 8.5: My Tickets list (Aran Edlek / Jennifer Anderson).*
+
+### 8.6 Regression - Ticket Detail
+![Figure 8.6: Requester Ticket Detail of TKT-2026-900002](./screenshots/fig_8_6_requester_ticket_detail.png)  
+*Figure 8.6: Requester Ticket Detail of TKT-2026-900002.*
+
+### 8.7 Regression - Attachments
+*Figure 8.7: Attachments - a file uploaded and listed on the Ticket.*
+
+### 8.8 Regression - Public Comments
+*Figure 8.8: Public Comments - the staff reply and a new comment from the Requester.*
+
+### 8.9 Regression - IT Staff Functions
+![Figure 8.9: IT Staff Ticket Queue with filters](./screenshots/fig_8_9_staff_queue.png)  
+*Figure 8.9: IT Staff Ticket Queue with filters, and owner and IT Priority on Staff Ticket Detail.*
+
+### 8.10 Regression - Internal Notes
+*Figure 8.10: Internal Notes on TKT-2026-900002 - visible to IT Staff only.*
+
+### 8.11 Regression - Administrator User Management
+![Figure 8.11: Administrator User Management](./screenshots/fig_8_11_user_management.png)  
+*Figure 8.11: Administrator User Management - user list with roles and active status.*
+
+---
+
+## Answer Part 9: Zen Green UI, Responsive, Accessibility, and Final Polish
+
+### 9.1 Rendered docs/lab-04/ui-spec.md
+
+**Link :** [https://github.com/aranedlek/toctickit/blob/main/docs/lab-04/ui-spec.md](https://github.com/aranedlek/toctickit/blob/main/docs/lab-04/ui-spec.md)
+
+*Figure 9.1: Rendered ui-spec.md - navigation, dashboards, Actions Taken, screen states, responsive rules, and accessibility.*
+
+### 9.2 IT Staff Dashboard
+![Figure 9.2a: IT Staff Dashboard on desktop (1440 × 900)](./screenshots/fig_9_2a_staff_desktop.png)  
+*Figure 9.2a: IT Staff Dashboard on desktop (1440 × 900).*
+
+![Figure 9.2b: IT Staff Dashboard on tablet (768 × 1024)](./screenshots/fig_9_2b_staff_tablet.png)  
+*Figure 9.2b: IT Staff Dashboard on tablet (768 × 1024).*
+
+![Figure 9.2c: IT Staff Dashboard on mobile (375 × 812)](./screenshots/fig_9_2c_staff_mobile.png)  
+*Figure 9.2c: IT Staff Dashboard on mobile (375 × 812).*
+
+### 9.3 Requester Dashboard
+![Figure 9.3a: Requester Dashboard on desktop (1440 × 900)](./screenshots/fig_9_3a_requester_desktop.png)  
+*Figure 9.3a: Requester Dashboard on desktop (1440 × 900).*
+
+![Figure 9.3b: Requester Dashboard on tablet (768 × 1024)](./screenshots/fig_9_3b_requester_tablet.png)  
+*Figure 9.3b: Requester Dashboard on tablet (768 × 1024).*
+
+![Figure 9.3c: Requester Dashboard on mobile (375 × 812)](./screenshots/fig_9_3c_requester_mobile.png)  
+*Figure 9.3c: Requester Dashboard on mobile (375 × 812).*
+
+### 9.4 Actions Taken on Ticket Detail
+![Figure 9.4a: Actions Taken on desktop](./screenshots/fig_9_4a_actions_desktop.png)  
+*Figure 9.4a: Actions Taken on desktop.*
+
+![Figure 9.4b: Actions Taken on tablet](./screenshots/fig_9_4b_actions_tablet.png)  
+*Figure 9.4b: Actions Taken on tablet.*
+
+![Figure 9.4c: Actions Taken on mobile](./screenshots/fig_9_4c_actions_mobile.png)  
+*Figure 9.4c: Actions Taken on mobile.*
+
+### 9.5 Keyboard Focus
+![Figure 9.5: Visible keyboard focus ring on the Action Date and Time field](./screenshots/fig_9_5_keyboard_focus.png)  
+*Figure 9.5: Visible keyboard focus ring on the Action Date and Time field.*
+
+### 9.6 Visual and Accessibility Checklist
+*Figure 9.6: Completed checklist - design consistency, dashboards, Actions Taken, editable/read-only fields, validation placement, keyboard focus, clipping, overlap, and horizontal overflow, all Pass.*
 
 ---
 
