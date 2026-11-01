@@ -93,6 +93,10 @@ router.get('/:id', async (req, res) => {
           include: { author: { select: { id: true, name: true, role: true } } },
           orderBy: { createdAt: 'asc' }
         } : false,
+        actionsTaken: {
+          include: { performedBy: { select: { id: true, name: true, email: true, role: true } } },
+          orderBy: { actionDateTime: 'asc' }
+        },
       },
     });
 
@@ -262,6 +266,163 @@ router.post('/:id/internal-notes', requireRole([Role.IT_STAFF, Role.ADMINISTRATO
     });
 
     res.status(201).json(note);
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// GET /api/tickets/:id/actions
+router.get('/:id/actions', async (req, res) => {
+  const ticketId = parseInt(req.params.id, 10);
+  if (isNaN(ticketId)) return res.status(400).json({ error: 'Invalid ticket ID' });
+
+  try {
+    const ticket = await prisma.ticket.findUnique({
+      where: { id: ticketId },
+      select: { requesterId: true }
+    });
+
+    if (!ticket) {
+      return res.status(404).json({ error: 'Ticket not found' });
+    }
+
+    // Role check: Requester can only view their own ticket's actions
+    if (req.user!.role === Role.REQUESTER && ticket.requesterId !== req.user!.id) {
+      return res.status(403).json({ error: 'Forbidden: You do not own this ticket' });
+    }
+
+    const actions = await prisma.actionTaken.findMany({
+      where: { ticketId },
+      include: {
+        performedBy: { select: { id: true, name: true, email: true, role: true } }
+      },
+      orderBy: { actionDateTime: 'asc' }
+    });
+
+    res.json(actions);
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// POST /api/tickets/:id/actions (IT Staff / Admin only)
+router.post('/:id/actions', requireRole([Role.IT_STAFF, Role.ADMINISTRATOR]), async (req, res) => {
+  const ticketId = parseInt(req.params.id, 10);
+  if (isNaN(ticketId)) return res.status(400).json({ error: 'Invalid ticket ID' });
+
+  const { actionDescription, result, followUpRequired = false, followUpNote, attachmentNotes, actionDateTime } = req.body;
+
+  // BR-06: Inactive staff cannot perform actions
+  if (!req.user!.isActive) {
+    return res.status(403).json({ error: 'Inactive staff cannot record actions' });
+  }
+
+  // BR-03: Mandatory description and result
+  if (!actionDescription || typeof actionDescription !== 'string' || actionDescription.trim().length < 5) {
+    return res.status(400).json({ error: 'Action description is required (min 5 characters)' });
+  }
+  if (!result || typeof result !== 'string' || result.trim().length < 3) {
+    return res.status(400).json({ error: 'Result is required (min 3 characters)' });
+  }
+
+  // BR-04: Follow-up note mandatory if followUpRequired is true
+  if (followUpRequired) {
+    if (!followUpNote || typeof followUpNote !== 'string' || followUpNote.trim() === '') {
+      return res.status(400).json({ error: 'Follow-up note is required when follow-up is needed' });
+    }
+  }
+
+  try {
+    const existingTicket = await prisma.ticket.findUnique({ where: { id: ticketId } });
+    if (!existingTicket) return res.status(404).json({ error: 'Ticket not found' });
+
+    const newAction = await prisma.actionTaken.create({
+      data: {
+        ticketId,
+        actionDateTime: actionDateTime ? new Date(actionDateTime) : new Date(),
+        actionDescription: actionDescription.trim(),
+        result: result.trim(),
+        performedById: req.user!.id,
+        followUpRequired: Boolean(followUpRequired),
+        followUpNote: followUpRequired ? followUpNote.trim() : null,
+        attachmentNotes: attachmentNotes ? String(attachmentNotes).trim() : null,
+      },
+      include: {
+        performedBy: { select: { id: true, name: true, email: true, role: true } }
+      }
+    });
+
+    res.status(201).json(newAction);
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// PATCH /api/tickets/:id/actions/:actionId (IT Staff / Admin only)
+router.patch('/:id/actions/:actionId', requireRole([Role.IT_STAFF, Role.ADMINISTRATOR]), async (req, res) => {
+  const ticketId = parseInt(req.params.id, 10);
+  const actionId = parseInt(req.params.actionId, 10);
+  if (isNaN(ticketId) || isNaN(actionId)) return res.status(400).json({ error: 'Invalid parameters' });
+
+  const { actionDescription, result, followUpRequired, followUpNote, attachmentNotes } = req.body;
+
+  try {
+    const existingAction = await prisma.actionTaken.findFirst({
+      where: { id: actionId, ticketId }
+    });
+
+    if (!existingAction) {
+      return res.status(404).json({ error: 'Action Taken not found' });
+    }
+
+    const updateData: any = {};
+
+    if (actionDescription !== undefined) {
+      if (typeof actionDescription !== 'string' || actionDescription.trim().length < 5) {
+        return res.status(400).json({ error: 'Action description must be at least 5 characters' });
+      }
+      updateData.actionDescription = actionDescription.trim();
+    }
+
+    if (result !== undefined) {
+      if (typeof result !== 'string' || result.trim().length < 3) {
+        return res.status(400).json({ error: 'Result must be at least 3 characters' });
+      }
+      updateData.result = result.trim();
+    }
+
+    const effectiveFollowUpRequired = followUpRequired !== undefined ? Boolean(followUpRequired) : existingAction.followUpRequired;
+    if (followUpRequired !== undefined) {
+      updateData.followUpRequired = effectiveFollowUpRequired;
+    }
+
+    if (effectiveFollowUpRequired) {
+      const noteToCheck = followUpNote !== undefined ? followUpNote : existingAction.followUpNote;
+      if (!noteToCheck || typeof noteToCheck !== 'string' || noteToCheck.trim() === '') {
+        return res.status(400).json({ error: 'Follow-up note is required when follow-up is needed' });
+      }
+      if (followUpNote !== undefined) {
+        updateData.followUpNote = followUpNote.trim();
+      }
+    } else {
+      if (followUpRequired !== undefined) {
+        updateData.followUpNote = null;
+      }
+    }
+
+    if (attachmentNotes !== undefined) {
+      updateData.attachmentNotes = attachmentNotes ? String(attachmentNotes).trim() : null;
+    }
+
+    const updated = await prisma.actionTaken.update({
+      where: { id: actionId },
+      data: updateData,
+      include: {
+        performedBy: { select: { id: true, name: true, email: true, role: true } }
+      }
+    });
+
+    res.json(updated);
   } catch (error) {
     res.status(500).json({ error: 'Internal server error' });
   }

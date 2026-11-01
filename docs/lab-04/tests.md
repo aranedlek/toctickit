@@ -11,12 +11,12 @@ Every test maps directly to an Acceptance Criterion (AC) or Business Rule (BR) s
 
 | Test ID | Type | Requirement / AC | What It Tests | Expected Result | Automated Test File | Status |
 | :--- | :--- | :--- | :--- | :--- | :--- | :---: |
-| **API-01** | API | AC-01 | Create valid Action Taken by IT Staff | 201 Created; saved with correct ticket and auto-bound performer. | `server/tests/lab-04/actions-taken.api.test.ts` | Planned |
-| **API-02** | API | BR-04 | Create Action Taken with `followUpRequired=true` but empty `followUpNote` | 400 Bad Request; descriptive validation message returned. | `server/tests/lab-04/actions-taken.api.test.ts` | Planned |
-| **API-03** | API | AC-03 | Requester attempts to create Action Taken | 403 Forbidden; no record inserted. | `server/tests/lab-04/actions-taken.api.test.ts` | Planned |
-| **API-04** | API | AC-04 | Requester views Actions Taken for own ticket | 200 OK; returns array of actions taken. | `server/tests/lab-04/actions-taken.api.test.ts` | Planned |
-| **API-05** | API | AC-04 | Requester attempts to view Actions Taken for another user's ticket | 403 Forbidden or 404 Not Found. | `server/tests/lab-04/actions-taken.api.test.ts` | Planned |
-| **API-06** | API | BR-02 | Different IT Staff member logs Action Taken on another staff's ticket | 201 Created; action performer recorded independently of ticket owner. | `server/tests/lab-04/actions-taken.api.test.ts` | Planned |
+| **API-01** | API | AC-01 | Create valid Action Taken by IT Staff | 201 Created; saved with correct ticket and auto-bound performer. | `server/tests/lab-04/actions-taken.api.test.ts` | Pass ✅ |
+| **API-02** | API | BR-04 | Create Action Taken with `followUpRequired=true` but empty `followUpNote` | 400 Bad Request; descriptive validation message returned. | `server/tests/lab-04/actions-taken.api.test.ts` | Pass ✅ |
+| **API-03** | API | AC-03 | Requester attempts to create Action Taken | 403 Forbidden; no record inserted. | `server/tests/lab-04/actions-taken.api.test.ts` | Pass ✅ |
+| **API-04** | API | AC-04 | Requester views Actions Taken for own ticket | 200 OK; returns array of actions taken. | `server/tests/lab-04/actions-taken.api.test.ts` | Pass ✅ |
+| **API-05** | API | AC-04 | Requester attempts to view Actions Taken for another user's ticket | 403 Forbidden or 404 Not Found. | `server/tests/lab-04/actions-taken.api.test.ts` | Pass ✅ |
+| **API-06** | API | BR-02 | Different IT Staff member logs Action Taken on another staff's ticket | 201 Created; action performer recorded independently of ticket owner. | `server/tests/lab-04/actions-taken.api.test.ts` | Pass ✅ |
 | **API-07** | API | BR-08 | Valid status transition `OPEN` -> `IN_PROGRESS` by IT Staff | 200 OK; status updated and version incremented. | `server/tests/lab-04/ticket-workflow.api.test.ts` | Planned |
 | **API-08** | API | AC-07 | Illegal status jump `NEW` -> `RESOLVED` directly | 422 Unprocessable Entity; state transition rejected. | `server/tests/lab-04/ticket-workflow.api.test.ts` | Planned |
 | **API-09** | API | BR-09 | Requester directly attempts to set ticket status to `RESOLVED` | 403 Forbidden; resolution gate enforced. | `server/tests/lab-04/ticket-workflow.api.test.ts` | Planned |
