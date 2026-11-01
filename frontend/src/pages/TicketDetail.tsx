@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import type { Ticket } from '../types';
 import Badge from '../components/Badge';
 import AttachmentItem from '../components/AttachmentItem';
+import ActionsTakenSection from '../components/ActionsTakenSection';
 import { fetchApi } from '../lib/api';
 
 export default function TicketDetail() {
@@ -171,6 +172,16 @@ export default function TicketDetail() {
             </div>
           )}
         </div>
+      </div>
+
+      {/* Actions Taken Section (Read-only for Requesters) */}
+      <div style={{ marginTop: '24px' }}>
+        <ActionsTakenSection
+          ticketId={ticket.id}
+          actions={ticket.actionsTaken || []}
+          onActionSaved={() => {}}
+          canManage={false}
+        />
       </div>
 
       {/* Communication Area */}

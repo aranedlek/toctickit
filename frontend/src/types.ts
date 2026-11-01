@@ -40,6 +40,26 @@ export interface Attachment {
   deletedAt: string | null;
 }
 
+export interface ActionTaken {
+  id: number;
+  ticketId: number;
+  actionDateTime: string;
+  actionDescription: string;
+  result: string;
+  performedById: number;
+  followUpRequired: boolean;
+  followUpNote?: string | null;
+  attachmentNotes?: string | null;
+  createdAt: string;
+  updatedAt: string;
+  performedBy?: {
+    id: number;
+    name: string;
+    email: string;
+    role: string;
+  };
+}
+
 export interface Ticket {
   id: number;
   number: string;
@@ -52,6 +72,7 @@ export interface Ticket {
   requesterId: number;
   categoryId: number;
   relatedSystemId: number | null;
+  version?: number;
   createdAt: string;
   updatedAt: string;
   category?: Category;
@@ -61,6 +82,7 @@ export interface Ticket {
   attachments?: Attachment[];
   publicComments?: Comment[];
   internalNotes?: Comment[];
+  actionsTaken?: ActionTaken[];
 }
 
 export interface PaginatedTickets {

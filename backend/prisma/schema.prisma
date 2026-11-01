@@ -32,6 +32,7 @@ model User {
   ownedTickets           Ticket[] @relation("TicketOwner")
   publicComments         PublicComment[]
   internalNotes          InternalNote[]
+  actionsTaken           ActionTaken[]   @relation("ActionPerformer")
 }
 
 model Category {
@@ -58,6 +59,7 @@ model Ticket {
   status          TicketStatus  @default(NEW)
   priority        Priority      @default(MEDIUM)
   itPriority      Priority?
+  version         Int           @default(1)
   requesterId     Int
   ticketOwnerId   Int?
   categoryId      Int
@@ -73,6 +75,7 @@ model Ticket {
   attachments     Attachment[]
   publicComments  PublicComment[]
   internalNotes   InternalNote[]
+  actionsTaken    ActionTaken[]
 }
 
 model Attachment {
@@ -128,3 +131,25 @@ enum Priority {
   HIGH
   URGENT
 }
+
+model ActionTaken {
+  id                Int      @id @default(autoincrement())
+  ticketId          Int
+  actionDateTime    DateTime @default(now())
+  actionDescription String
+  result            String
+  performedById     Int
+  followUpRequired  Boolean  @default(false)
+  followUpNote      String?
+  attachmentNotes   String?
+
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  ticket      Ticket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  performedBy User   @relation("ActionPerformer", fields: [performedById], references: [id])
+
+  @@index([ticketId])
+  @@index([performedById])
+}
+

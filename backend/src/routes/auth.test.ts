@@ -10,6 +10,13 @@ describe('Auth API', () => {
   let inactiveUser: any;
 
   beforeAll(async () => {
+    // Clean up any existing test users from previous runs
+    await prisma.user.deleteMany({
+      where: {
+        email: { in: ['testactive@example.com', 'testinactive@example.com'] }
+      }
+    });
+
     // Setup test users
     const salt = await bcrypt.genSalt(10);
     const passwordHash = await bcrypt.hash('TestPassword123!', salt);
