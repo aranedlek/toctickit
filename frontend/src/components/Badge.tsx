@@ -11,10 +11,14 @@ export default function Badge({ type, value }: BadgeProps) {
 
   if (type === 'status') {
     switch (value) {
-      case 'OPEN': bg = '#D8F3DC'; color = '#1B4332'; break;
-      case 'IN_PROGRESS': bg = '#FEF3CD'; color = '#856404'; break;
-      case 'RESOLVED': bg = '#D1ECF1'; color = '#0C5460'; break;
-      case 'CLOSED': bg = '#E2E3E5'; color = '#383D41'; break;
+      case 'NEW': bg = '#E0F2FE'; color = '#0369A1'; break;
+      case 'OPEN': bg = '#E0E7FF'; color = '#4338CA'; break;
+      case 'IN_PROGRESS': bg = '#FEF3C7'; color = '#B45309'; break;
+      case 'WAITING_FOR_REQUESTER': bg = '#FEE2E2'; color = '#B91C1C'; break;
+      case 'RESOLVED': bg = '#D1FAE5'; color = '#065F46'; break;
+      case 'CLOSED': bg = '#F3F4F6'; color = '#4B5563'; break;
+      case 'REOPENED': bg = '#FDE68A'; color = '#92400E'; break;
+      case 'CANCELLED': bg = '#F1F5F9'; color = '#64748B'; break;
     }
   } else {
     switch (value) {
