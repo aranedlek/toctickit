@@ -29,7 +29,7 @@ All code and specifications in Sprint 4 follow strict engineering discipline:
 | **#39** | `docs: create Lab 4 engineering contract specification and test plan` <br> `feature/lab4-issue-1-spec` | Issue #1 (Sprint 4 Engineering Contract) | `Ponatinylilbug` | **Approved & Merged ✅** | `42ff9e2` |
 | **#40** | `feat: implement Actions Taken foundation and database` <br> `feature/lab4-issue-2-actions-foundation` | Issue #2 (Actions Taken Foundation) | `Ponatinylilbug` | **Approved & Merged ✅** | `afee134` |
 | **#41** | `feat: implement Actions Taken UI on Ticket Detail` <br> `feature/lab4-issue-3-actions-ui` | Issue #3 (Actions Taken UI) | `Ponatinylilbug` | **Approved & Merged ✅** | `1d6a93f` |
-| **#42** | `feat: enforce Ticket lifecycle workflow and resolution gate` <br> `feature/lab4-issue-4-ticket-workflow` | Issue #4 (Ticket Workflow) | `Ponatinylilbug` | Pending Review | |
+| **#42** | `feat: enforce Ticket lifecycle workflow and resolution gate` <br> `feature/lab4-issue-4-ticket-workflow` | Issue #4 (Ticket Workflow) | `Ponatinylilbug` | **Approved & Merged ✅** | `937eaf5` |
 | **#--** | `feat: implement role-based dashboards` <br> `feature/lab4-issue-5-dashboards` | Issue #5 (Role Dashboards) | `Ponatinylilbug` | Pending | |
 | **#--** | `chore: final regression, accessibility polish and hardening` <br> `feature/lab4-issue-6-hardening` | Issue #6 (Final Hardening) | `Ponatinylilbug` | Pending | |
 
@@ -60,9 +60,9 @@ All code and specifications in Sprint 4 follow strict engineering discipline:
 
 ### PR #42: Ticket Lifecycle Workflow & Resolution Gate (`feature/lab4-issue-4-ticket-workflow`)
 - **Reviewer Comment (`Ponatinylilbug`):**  
-  *Pending peer review of ticket status transition matrix (BR-08), resolution gate advisory endpoint (BR-09), optimistic concurrency control (BR-10), Staff status selection controls, conflict notification banner (UI-06), and automated test suites.*
+  *"การบังคับใช้ State Transition Matrix (BR-08) มีความถูกต้องรัดกุม ป้องกันการ jump สถานะผิดกฎได้ครบถ้วน กลไก Resolution Gate (BR-09) แยก Requester Advisory ออกจาก Staff Verification ชัดเจน และระบบ Optimistic Concurrency Control (BR-10) ป้องกันการเขียนทับพร้อมแจ้งเตือนแบนเนอร์และปุ่ม Refresh Ticket ได้ดี เทสต์ 20 ข้อผ่าน 100% อนุมัติและรวมเข้า lab4-staging เรียบร้อยครับ"*
 - **Author Response (`aranedlek`):**  
   *Implemented PATCH /api/tickets/:id/status adhering strictly to BR-08 transition matrix, built POST /api/tickets/:id/resolve-advisory for requester satisfaction flagging without status elevation (BR-09), implemented optimistic concurrency version checking returning HTTP 409 Conflict upon collision (BR-10), updated StaffTicketDetail to dynamically restrict next status options according to role and state, added accessible conflict notification banner with refresh trigger, and authored comprehensive backend and frontend test suites (13 backend tests, 7 frontend tests passing 100%).*
-- **Resolution:** Under review.
+- **Resolution:** Approved and merged into `lab4-staging` via commit `937eaf5`.
 
 
