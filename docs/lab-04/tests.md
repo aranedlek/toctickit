@@ -26,9 +26,9 @@ Every test maps directly to an Acceptance Criterion (AC) or Business Rule (BR) s
 | **API-13** | API | AC-05 | IT Staff Dashboard metrics retrieval | 200 OK; returns accurate counts matching database queries. | `server/tests/lab-04/staff-dashboard.api.test.ts` | Planned |
 | **API-14** | API | BR-13 | Dashboard metrics when user has 0 tickets | 200 OK; returns 0 counts and empty arrays gracefully. | `server/tests/lab-04/requester-dashboard.api.test.ts` | Planned |
 | **API-15** | Regression | FR-09 | Existing Lab 1–3 endpoints (Auth, Notes, Attachments, Admin Users) | All tests pass without regression. | `server/tests/lab-03/*.test.ts` | Planned |
-| **UI-01** | UI | AC-01 | Actions Taken list rendering on Ticket Detail | Renders action cards/table with all required fields. | `frontend/src/tests/lab-04/ActionsTaken.test.tsx` | Planned |
-| **UI-02** | UI | BR-04 | Actions Taken modal conditional follow-up validation | Toggling follow-up checkbox requires non-empty follow-up note. | `frontend/src/tests/lab-04/ActionsTaken.test.tsx` | Planned |
-| **UI-03** | UI | AC-03 | Requester view of Ticket Detail hides action creation controls | "+ Record Action Taken" and edit buttons not rendered. | `frontend/src/tests/lab-04/ActionsTaken.test.tsx` | Planned |
+| **UI-01** | UI | AC-01 | Actions Taken list rendering on Ticket Detail | Renders action cards/table with all required fields. | `frontend/src/tests/lab-04/ActionsTaken.test.tsx` | Pass ✅ |
+| **UI-02** | UI | BR-04 | Actions Taken modal conditional follow-up validation | Toggling follow-up checkbox requires non-empty follow-up note. | `frontend/src/tests/lab-04/ActionsTaken.test.tsx` | Pass ✅ |
+| **UI-03** | UI | AC-03 | Requester view of Ticket Detail hides action creation controls | "+ Record Action Taken" and edit buttons not rendered. | `frontend/src/tests/lab-04/ActionsTaken.test.tsx` | Pass ✅ |
 | **UI-04** | UI | AC-05 | IT Staff Dashboard metric cards and drill-down clicks | Clicking metric card navigates to queue with corresponding filter. | `frontend/src/tests/lab-04/StaffDashboard.test.tsx` | Planned |
 | **UI-05** | UI | AC-06 | Requester Dashboard rendering and quick actions | Displays my ticket metrics and recent ticket links. | `frontend/src/tests/lab-04/RequesterDashboard.test.tsx` | Planned |
 | **UI-06** | UI | AC-08 | Concurrency conflict (HTTP 409) user notification | Renders warning banner prompting refresh without crashing form. | `frontend/src/tests/lab-04/TicketWorkflow.test.tsx` | Planned |

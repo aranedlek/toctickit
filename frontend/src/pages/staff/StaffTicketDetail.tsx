@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import type { Ticket } from '../../types';
+import type { Ticket, ActionTaken } from '../../types';
 import AttachmentItem from '../../components/AttachmentItem';
+import ActionsTakenSection from '../../components/ActionsTakenSection';
 import { fetchApi } from '../../lib/api';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -90,6 +91,22 @@ export default function StaffTicketDetail() {
     }
   };
 
+  const handleActionSaved = (savedAction: ActionTaken) => {
+    setTicket(prev => {
+      if (!prev) return prev;
+      const existing = prev.actionsTaken || [];
+      const index = existing.findIndex(a => a.id === savedAction.id);
+      let updatedActions: ActionTaken[];
+      if (index >= 0) {
+        updatedActions = [...existing];
+        updatedActions[index] = savedAction;
+      } else {
+        updatedActions = [...existing, savedAction];
+      }
+      return { ...prev, actionsTaken: updatedActions };
+    });
+  };
+
   if (loading) return <div className="skeleton" style={{ height: '500px' }} />;
   if (error) return <div className="card" style={{ color: 'var(--color-error)' }}>{error}</div>;
   if (!ticket) return null;
@@ -158,6 +175,15 @@ export default function StaffTicketDetail() {
             )}
           </div>
         </div>
+
+        {/* Actions Taken Section */}
+        <ActionsTakenSection
+          ticketId={ticket.id}
+          actions={ticket.actionsTaken || []}
+          onActionSaved={handleActionSaved}
+          canManage={user?.role === 'IT_STAFF' || user?.role === 'ADMINISTRATOR'}
+          currentUserName={user?.name}
+        />
 
         {/* Activity Feed */}
         <div className="card">
