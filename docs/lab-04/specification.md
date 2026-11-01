@@ -217,14 +217,14 @@ model ActionTaken {
 
 ## 10. Definition of Done (DoD)
 - [x] Sprint 4 Engineering Contract specification approved and committed in `docs/lab-04/`.
-- [ ] Prisma schema updated with `ActionTaken` model, concurrency version, and migrations executed.
-- [ ] Idempotent seed script updated with realistic actions taken and dashboard distribution data.
-- [ ] Backend REST APIs implemented for Actions Taken, Dashboards, and Status Transitions with strict role and concurrency checks.
-- [ ] Frontend UI screens implemented for IT Staff Dashboard, Requester Dashboard, and Ticket Detail Actions Taken section.
-- [ ] Zen Green theme, responsiveness, and accessibility guidelines verified across all screens.
-- [ ] Automated test suite (API integration, UI components, Playwright E2E) created and passing 100%.
-- [ ] Full regression verification across Lab 1–3 functionality (Auth, Tickets, Comments, Notes, Attachments, Admin).
-- [ ] All GitHub Issues completed on Kanban board and tracked via Pull Requests with Peer Review evidence in `reviewer.md`.
+- [x] Prisma schema updated with `ActionTaken` model, concurrency version, and migrations executed.
+- [x] Idempotent seed script updated with realistic actions taken and dashboard distribution data.
+- [x] Backend REST APIs implemented for Actions Taken, Dashboards, and Status Transitions with strict role and concurrency checks.
+- [x] Frontend UI screens implemented for IT Staff Dashboard, Requester Dashboard, and Ticket Detail Actions Taken section.
+- [x] Zen Green theme, responsiveness, and accessibility guidelines verified across all screens.
+- [x] Automated test suite (API integration, UI components, Playwright E2E) created and passing 100%.
+- [x] Full regression verification across Lab 1–3 functionality (Auth, Tickets, Comments, Notes, Attachments, Admin).
+- [x] All GitHub Issues completed on Kanban board and tracked via Pull Requests with Peer Review evidence in `reviewer.md`.
 
 ---
 

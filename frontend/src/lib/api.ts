@@ -16,13 +16,17 @@ export async function fetchApi(endpoint: string, options: RequestInit = {}) {
 
   if (!response.ok) {
     let errorMessage = 'An error occurred';
+    let errorData: any = null;
     try {
-      const errorData = await response.json();
-      errorMessage = errorData.error || errorMessage;
+      errorData = await response.json();
+      errorMessage = errorData.message || errorData.error || errorMessage;
     } catch (e) {
       // Not JSON
     }
-    throw new Error(errorMessage);
+    const err: any = new Error(errorMessage);
+    err.status = response.status;
+    err.data = errorData;
+    throw err;
   }
 
   // Handle 204 No Content or empty responses

@@ -6,6 +6,28 @@ import ActionsTakenSection from '../../components/ActionsTakenSection';
 import { fetchApi } from '../../lib/api';
 import { useAuth } from '../../contexts/AuthContext';
 
+const PERMITTED_STATUS_TRANSITIONS: Record<string, string[]> = {
+  NEW: ['OPEN', 'CANCELLED'],
+  OPEN: ['IN_PROGRESS', 'WAITING_FOR_REQUESTER', 'CANCELLED'],
+  IN_PROGRESS: ['WAITING_FOR_REQUESTER', 'RESOLVED', 'CANCELLED'],
+  WAITING_FOR_REQUESTER: ['IN_PROGRESS', 'RESOLVED', 'CANCELLED'],
+  RESOLVED: ['CLOSED', 'REOPENED'],
+  REOPENED: ['IN_PROGRESS', 'WAITING_FOR_REQUESTER', 'CANCELLED'],
+  CLOSED: ['REOPENED'], // Allowed for Administrator only
+  CANCELLED: [],
+};
+
+const STATUS_LABELS: Record<string, string> = {
+  NEW: 'New',
+  OPEN: 'Open',
+  IN_PROGRESS: 'In Progress',
+  WAITING_FOR_REQUESTER: 'Waiting on User',
+  RESOLVED: 'Resolved',
+  CLOSED: 'Closed',
+  REOPENED: 'Reopened',
+  CANCELLED: 'Cancelled',
+};
+
 export default function StaffTicketDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -21,13 +43,18 @@ export default function StaffTicketDetail() {
   const [ownerId, setOwnerId] = useState<string>('');
   const [savingOps, setSavingOps] = useState(false);
   const [opsMessage, setOpsMessage] = useState('');
+  const [conflictMessage, setConflictMessage] = useState('');
+  const [statusError, setStatusError] = useState('');
 
   // Comm/Note state
   const [activeTab, setActiveTab] = useState<'PUBLIC' | 'INTERNAL'>('PUBLIC');
   const [commentText, setCommentText] = useState('');
   const [submittingComment, setSubmittingComment] = useState(false);
 
-  useEffect(() => {
+  const loadTicket = () => {
+    setLoading(true);
+    setConflictMessage('');
+    setStatusError('');
     fetchApi(`/tickets/${id}`)
       .then(data => {
         setTicket(data);
@@ -40,25 +67,62 @@ export default function StaffTicketDetail() {
         setError(err.message || 'Ticket not found');
         setLoading(false);
       });
+  };
+
+  useEffect(() => {
+    loadTicket();
   }, [id]);
 
   const handleUpdateOperations = async () => {
+    if (!ticket) return;
     setSavingOps(true);
     setOpsMessage('');
+    setConflictMessage('');
+    setStatusError('');
+
     try {
-      const updated = await fetchApi(`/tickets/${id}`, {
-        method: 'PATCH',
-        body: JSON.stringify({
-          status,
-          itPriority,
-          ticketOwnerId: ownerId === 'unassigned' ? null : parseInt(ownerId)
-        })
-      });
-      setTicket(updated);
+      let currentTicket = ticket;
+
+      // BR-08 & BR-10: If status changed, transition via status endpoint with OCC version
+      if (status !== ticket.status) {
+        const statusRes = await fetchApi(`/tickets/${id}/status`, {
+          method: 'PATCH',
+          body: JSON.stringify({
+            status,
+            version: ticket.version ?? 1,
+          }),
+        });
+        currentTicket = { ...currentTicket, ...statusRes, version: statusRes.version };
+        setTicket(currentTicket);
+        setStatus(statusRes.status);
+      }
+
+      // If priority or ticketOwner changed, update ticket metadata
+      const nextOwnerId = ownerId === 'unassigned' ? null : parseInt(ownerId, 10);
+      if (itPriority !== currentTicket.itPriority || nextOwnerId !== currentTicket.ticketOwnerId) {
+        const metaRes = await fetchApi(`/tickets/${id}`, {
+          method: 'PATCH',
+          body: JSON.stringify({
+            itPriority,
+            ticketOwnerId: nextOwnerId,
+          }),
+        });
+        currentTicket = { ...currentTicket, ...metaRes };
+        setTicket(currentTicket);
+      }
+
       setOpsMessage('Updated successfully');
       setTimeout(() => setOpsMessage(''), 3000);
     } catch (err: any) {
-      alert(err.message || 'Failed to update ticket');
+      if (err.status === 409 || err.data?.error === 'CONFLICT') {
+        setConflictMessage(
+          err.message || 'This ticket was modified by another user while you were editing. Please refresh and review before retrying.'
+        );
+      } else if (err.status === 422 || err.data?.error === 'INVALID_TRANSITION') {
+        setStatusError(err.message || 'Cannot perform this status transition.');
+      } else {
+        alert(err.message || 'Failed to update ticket');
+      }
     } finally {
       setSavingOps(false);
     }
@@ -285,22 +349,82 @@ export default function StaffTicketDetail() {
         <div className="card" style={{ position: 'sticky', top: '88px' }}>
           <h2 style={{ fontSize: '15px', fontWeight: 700, margin: '0 0 16px 0', paddingBottom: '12px', borderBottom: '1px solid #eaeaea' }}>Ticket Details</h2>
           
+          {/* Concurrency Conflict Banner (UI-06 / AC-08) */}
+          {conflictMessage && (
+            <div 
+              role="alert"
+              data-testid="concurrency-conflict-banner"
+              style={{ 
+                backgroundColor: '#FEF2F2', 
+                border: '1px solid #F87171', 
+                color: '#991B1B', 
+                padding: '12px', 
+                borderRadius: '6px', 
+                marginBottom: '16px',
+                fontSize: '13px'
+              }}
+            >
+              <div style={{ fontWeight: 700, marginBottom: '4px' }}>⚠️ Concurrency Conflict</div>
+              <div style={{ marginBottom: '8px' }}>{conflictMessage}</div>
+              <button 
+                type="button"
+                data-testid="refresh-ticket-button"
+                onClick={loadTicket}
+                style={{
+                  backgroundColor: '#DC2626',
+                  color: 'white',
+                  border: 'none',
+                  padding: '6px 12px',
+                  borderRadius: '4px',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  cursor: 'pointer'
+                }}
+              >
+                Refresh Ticket
+              </button>
+            </div>
+          )}
+
           <div style={{ marginBottom: '16px' }}>
             <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: '#555', marginBottom: '6px' }}>Status</label>
-            <select 
-              value={status} 
-              onChange={e => setStatus(e.target.value)}
-              style={{ width: '100%', padding: '8px 12px', borderRadius: '6px', border: '1px solid #d0d0d0', fontSize: '13px' }}
-            >
-              <option value="NEW">New</option>
-              <option value="OPEN">Open</option>
-              <option value="IN_PROGRESS">In Progress</option>
-              <option value="WAITING_FOR_REQUESTER">Waiting on User</option>
-              <option value="RESOLVED">Resolved</option>
-              <option value="CLOSED">Closed</option>
-              <option value="REOPENED">Reopened</option>
-              <option value="CANCELLED">Cancelled</option>
-            </select>
+            {(() => {
+              const currentStatus = ticket.status;
+              const permittedNext = PERMITTED_STATUS_TRANSITIONS[currentStatus] || [];
+              const filteredNext = user?.role === 'ADMINISTRATOR'
+                ? permittedNext
+                : permittedNext.filter(s => !(currentStatus === 'CLOSED' && s === 'REOPENED'));
+              const availableStatuses = Array.from(new Set([currentStatus, ...filteredNext]));
+              const isTerminal = availableStatuses.length === 1 && (currentStatus === 'CLOSED' || currentStatus === 'CANCELLED');
+
+              return (
+                <>
+                  <select 
+                    data-testid="ticket-status-select"
+                    value={status} 
+                    disabled={isTerminal}
+                    onChange={e => setStatus(e.target.value)}
+                    style={{ width: '100%', padding: '8px 12px', borderRadius: '6px', border: '1px solid #d0d0d0', fontSize: '13px' }}
+                  >
+                    {availableStatuses.map(s => (
+                      <option key={s} value={s}>
+                        {STATUS_LABELS[s] || s}{s === currentStatus ? ' (Current)' : ''}
+                      </option>
+                    ))}
+                  </select>
+                  {isTerminal && (
+                    <div style={{ fontSize: '11px', color: '#6b7280', marginTop: '4px' }}>
+                      Terminal state · No transitions permitted
+                    </div>
+                  )}
+                  {statusError && (
+                    <div role="alert" style={{ color: '#DC2626', fontSize: '12px', marginTop: '4px' }}>
+                      {statusError}
+                    </div>
+                  )}
+                </>
+              );
+            })()}
           </div>
           
           <div style={{ marginBottom: '16px' }}>

@@ -67,19 +67,21 @@ export default function Navbar() {
 
       {/* Center Links */}
       {user && !user.requiresPasswordChange && (
-        <div style={{ display: 'flex', alignItems: 'center', gap: '32px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '28px' }}>
           {isStaff ? (
             <>
-              <Link to="/staff/tickets" style={{ color: location.pathname === '/staff/tickets' ? '#111' : '#555', fontSize: '14px', fontWeight: 600, textDecoration: 'none' }}>Ticket Queue</Link>
-              <Link to="/staff/settings" style={{ color: location.pathname === '/staff/settings' ? '#111' : '#555', fontSize: '14px', fontWeight: 600, textDecoration: 'none' }}>Settings</Link>
+              <Link to="/staff/dashboard" style={{ color: location.pathname === '/staff/dashboard' ? '#2e7d32' : '#555', fontSize: '14px', fontWeight: 600, textDecoration: 'none' }}>Dashboard</Link>
+              <Link to="/staff/tickets" style={{ color: location.pathname === '/staff/tickets' ? '#2e7d32' : '#555', fontSize: '14px', fontWeight: 600, textDecoration: 'none' }}>Ticket Queue</Link>
+              <Link to="/staff/settings" style={{ color: location.pathname === '/staff/settings' ? '#2e7d32' : '#555', fontSize: '14px', fontWeight: 600, textDecoration: 'none' }}>Settings</Link>
               {user.role === 'ADMINISTRATOR' && (
-                <Link to="/admin/users" style={{ color: location.pathname === '/admin/users' ? '#111' : '#555', fontSize: '14px', fontWeight: 600, textDecoration: 'none' }}>User Management</Link>
+                <Link to="/admin/users" style={{ color: location.pathname === '/admin/users' ? '#2e7d32' : '#555', fontSize: '14px', fontWeight: 600, textDecoration: 'none' }}>User Management</Link>
               )}
             </>
           ) : (
             <>
-              <Link to="/my-tickets" style={{ color: location.pathname === '/my-tickets' ? '#111' : '#555', fontSize: '14px', fontWeight: 600, textDecoration: 'none' }}>My Tickets</Link>
-              <Link to="/tickets/new" style={{ color: '#888', fontSize: '14px', fontWeight: 500, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <Link to="/requester/dashboard" style={{ color: location.pathname === '/requester/dashboard' ? '#2e7d32' : '#555', fontSize: '14px', fontWeight: 600, textDecoration: 'none' }}>Dashboard</Link>
+              <Link to="/my-tickets" style={{ color: location.pathname === '/my-tickets' ? '#2e7d32' : '#555', fontSize: '14px', fontWeight: 600, textDecoration: 'none' }}>My Tickets</Link>
+              <Link to="/tickets/new" style={{ color: '#2e7d32', fontSize: '14px', fontWeight: 600, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}>
                 <span>+</span> New Ticket
               </Link>
             </>

@@ -92,3 +92,50 @@ export interface PaginatedTickets {
   limit: number;
   totalPages: number;
 }
+
+export interface StaffDashboardData {
+  metrics: {
+    unassignedCount: number;
+    openCount: number;
+    inProgressCount: number;
+    waitingForRequesterCount: number;
+    assignedToMeCount: number;
+    totalActiveTickets: number;
+  };
+  priorityBreakdown: {
+    URGENT: number;
+    HIGH: number;
+    MEDIUM: number;
+    LOW: number;
+  };
+  recentTickets: Array<{
+    id: number;
+    number?: string;
+    title: string;
+    status: TicketStatus;
+    priority: Priority;
+    itPriority?: Priority;
+    ticketOwner?: { id: number; name: string } | null;
+    requester?: { id: number; name: string } | null;
+    updatedAt: string;
+  }>;
+}
+
+export interface RequesterDashboardData {
+  metrics: {
+    myOpenTicketsCount: number;
+    inProgressCount: number;
+    waitingForRequesterCount: number;
+    resolvedCount: number;
+    closedCount: number;
+  };
+  recentTickets: Array<{
+    id: number;
+    number?: string;
+    title: string;
+    status: TicketStatus;
+    priority: Priority;
+    updatedAt: string;
+  }>;
+}
+

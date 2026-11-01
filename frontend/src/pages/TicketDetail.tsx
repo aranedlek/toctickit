@@ -59,15 +59,29 @@ export default function TicketDetail() {
     }
   };
 
-  const handleResolve = async () => {
-    if (!confirm('Are you sure you want to mark this ticket as resolved?')) return;
+  const [advisoryMessage, setAdvisoryMessage] = useState('');
+
+  const handleAdvisoryResolve = async () => {
+    const confirmed = window.confirm(
+      'This notifies the IT Staff that your issue is resolved. An IT specialist will review and formally close the ticket. Do you want to proceed?'
+    );
+    if (!confirmed) return;
     
     setResolving(true);
+    setAdvisoryMessage('');
     try {
-      const updated = await fetchApi(`/tickets/${id}/resolve`, { method: 'PATCH' });
-      setTicket(prev => prev ? { ...prev, status: updated.status } : null);
+      const res = await fetchApi(`/tickets/${id}/resolve-advisory`, {
+        method: 'POST',
+        body: JSON.stringify({
+          note: 'The requester indicates the problem appears resolved.'
+        })
+      });
+      const refreshedTicket = await fetchApi(`/tickets/${id}`);
+      setTicket(refreshedTicket);
+      setAdvisoryMessage(res?.message || 'Advisory resolution recorded. IT Staff will review and formally close the ticket.');
+      setTimeout(() => setAdvisoryMessage(''), 6000);
     } catch (err: any) {
-      alert(err.message || 'Failed to resolve ticket');
+      alert(err.message || 'Failed to submit advisory resolution');
     } finally {
       setResolving(false);
     }
@@ -102,24 +116,53 @@ export default function TicketDetail() {
   if (error) return <div className="card" style={{ color: 'var(--color-error)' }}>{error}</div>;
   if (!ticket) return null;
 
-  const canResolve = ticket.status !== 'RESOLVED' && ticket.status !== 'CLOSED' && ticket.status !== 'CANCELLED';
+  const canSubmitAdvisory = ticket.status === 'WAITING_FOR_REQUESTER' || ticket.status === 'IN_PROGRESS';
 
   return (
     <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '16px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '16px', alignItems: 'center' }}>
         <button onClick={() => navigate('/my-tickets')} style={{ backgroundColor: 'var(--color-surface)', color: 'var(--color-text-primary)', border: '1px solid var(--color-border)' }}>
           ← Back to My Tickets
         </button>
-        {canResolve && (
+        {canSubmitAdvisory && (
           <button 
-            onClick={handleResolve} 
+            data-testid="advisory-resolve-button"
+            onClick={handleAdvisoryResolve} 
             disabled={resolving}
-            style={{ backgroundColor: '#2e7d32', color: 'white', border: 'none', fontWeight: 600, opacity: resolving ? 0.7 : 1 }}
+            style={{ 
+              backgroundColor: '#2D6A4F', 
+              color: 'white', 
+              border: 'none', 
+              padding: '8px 16px',
+              borderRadius: '6px',
+              fontWeight: 600, 
+              opacity: resolving ? 0.7 : 1,
+              cursor: resolving ? 'not-allowed' : 'pointer'
+            }}
           >
-            {resolving ? 'Resolving...' : '✓ Mark as Resolved'}
+            {resolving ? 'Submitting...' : '✓ I Confirm the Problem Appears Resolved'}
           </button>
         )}
       </div>
+
+      {advisoryMessage && (
+        <div 
+          role="status" 
+          data-testid="advisory-success-banner"
+          style={{
+            backgroundColor: '#D1FAE5',
+            border: '1px solid #34D399',
+            color: '#065F46',
+            padding: '12px 16px',
+            borderRadius: '8px',
+            marginBottom: '16px',
+            fontSize: '14px',
+            fontWeight: 500
+          }}
+        >
+          ✅ {advisoryMessage}
+        </div>
+      )}
 
       <div className="card">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px' }}>

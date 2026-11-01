@@ -40,8 +40,16 @@ export default function UserFormModal({ isOpen, onClose, onSave, user, currentAd
         setSetNewPassword(true);
       }
       setError('');
+
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') {
+          onClose();
+        }
+      };
+      window.addEventListener('keydown', handleKeyDown);
+      return () => window.removeEventListener('keydown', handleKeyDown);
     }
-  }, [isOpen, user]);
+  }, [isOpen, user, onClose]);
 
   if (!isOpen) return null;
 
@@ -77,21 +85,26 @@ export default function UserFormModal({ isOpen, onClose, onSave, user, currentAd
   };
 
   return (
-    <div style={{
-      position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-      backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 1000,
-      display: 'flex', alignItems: 'center', justifyContent: 'center',
-      fontFamily: "'Inter', sans-serif"
-    }}>
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="user-modal-title"
+      style={{
+        position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+        backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 1000,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        fontFamily: "'Inter', sans-serif"
+      }}
+    >
       <div style={{
         backgroundColor: '#fff', borderRadius: '12px', width: '100%', maxWidth: '500px',
         padding: '32px', boxShadow: '0 12px 40px rgba(0,0,0,0.1)'
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-          <h2 style={{ fontSize: '20px', fontWeight: 700, margin: 0, color: '#111' }}>
+          <h2 id="user-modal-title" style={{ fontSize: '20px', fontWeight: 700, margin: 0, color: '#111' }}>
             {isEditing ? 'Edit User' : 'Create New User'}
           </h2>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', fontSize: '20px', cursor: 'pointer', color: '#888' }}>×</button>
+          <button onClick={onClose} aria-label="Close dialog" style={{ background: 'none', border: 'none', fontSize: '20px', cursor: 'pointer', color: '#888' }}>×</button>
         </div>
 
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
