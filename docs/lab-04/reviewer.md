@@ -26,7 +26,7 @@ All code and specifications in Sprint 4 follow strict engineering discipline:
 
 | PR # | Title & Branch | Scope / Issue | Reviewer | Decision | Merge Commit |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **#39** | `docs: create Lab 4 engineering contract specification and test plan` <br> `feature/lab4-issue-1-spec` | Issue #1 (Sprint 4 Engineering Contract) | `Ponatinylilbug` | Pending Review | |
+| **#39** | `docs: create Lab 4 engineering contract specification and test plan` <br> `feature/lab4-issue-1-spec` | Issue #1 (Sprint 4 Engineering Contract) | `Ponatinylilbug` | **Approved & Merged ✅** | `42ff9e2` |
 | **#--** | `feat: implement Actions Taken foundation and database` <br> `feature/lab4-issue-2-actions-foundation` | Issue #2 (Actions Taken Foundation) | `Ponatinylilbug` | Pending | |
 | **#--** | `feat: implement Actions Taken UI on Ticket Detail` <br> `feature/lab4-issue-3-actions-ui` | Issue #3 (Actions Taken UI) | `Ponatinylilbug` | Pending | |
 | **#--** | `feat: enforce Ticket lifecycle workflow and resolution gate` <br> `feature/lab4-issue-4-ticket-workflow` | Issue #4 (Ticket Workflow) | `Ponatinylilbug` | Pending | |
@@ -39,7 +39,8 @@ All code and specifications in Sprint 4 follow strict engineering discipline:
 
 ### PR #39: Sprint 4 Engineering Contract Specification (`feature/lab4-issue-1-spec`)
 - **Reviewer Comment (`Ponatinylilbug`):**  
-  *Pending peer review of initial specification documents (`specification.md`, `ui-spec.md`, `api-spec.md`, `tests.md`).*
+  *"Specification ละเอียดและครอบคลุมทั้ง Actions Taken model, Ticket state transition matrix, Resolution gate และ Dashboards ครบถ้วนตาม Handout Lab 4 แนะนำให้เตรียม seed data ที่มีทั้ง ticket ที่มี 0, 1 และหลาย actions taken ให้พร้อมสำหรับการทดสอบและทำภาพหลักฐานส่งงาน"*
 - **Author Response (`aranedlek`):**  
-  *Prepared complete Sprint 4 contract covering parent-child Actions Taken model, Ticket transition matrix, resolution gate, optimistic concurrency control, role dashboards, and full test plan.*
-- **Resolution:** Under review.
+  *"รับทราบและขอบคุณครับ ใน Issue 2 (Actions Taken Foundation) จะทำ idempotent seed ที่ครอบคลุม ticket ที่มี 0, 1 และหลาย actions taken พร้อมทั้งสถานะ ticket ครบทุกรูปแบบเพื่อรองรับ dashboard queries ครับ"*
+- **Resolution:** Approved and merged into `lab4-staging` via commit `42ff9e2`.
+
