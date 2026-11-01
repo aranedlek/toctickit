@@ -27,7 +27,7 @@ All code and specifications in Sprint 4 follow strict engineering discipline:
 | PR # | Title & Branch | Scope / Issue | Reviewer | Decision | Merge Commit |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **#39** | `docs: create Lab 4 engineering contract specification and test plan` <br> `feature/lab4-issue-1-spec` | Issue #1 (Sprint 4 Engineering Contract) | `Ponatinylilbug` | **Approved & Merged ✅** | `42ff9e2` |
-| **#--** | `feat: implement Actions Taken foundation and database` <br> `feature/lab4-issue-2-actions-foundation` | Issue #2 (Actions Taken Foundation) | `Ponatinylilbug` | Pending | |
+| **#40** | `feat: implement Actions Taken foundation and database` <br> `feature/lab4-issue-2-actions-foundation` | Issue #2 (Actions Taken Foundation) | `Ponatinylilbug` | Pending Review | |
 | **#--** | `feat: implement Actions Taken UI on Ticket Detail` <br> `feature/lab4-issue-3-actions-ui` | Issue #3 (Actions Taken UI) | `Ponatinylilbug` | Pending | |
 | **#--** | `feat: enforce Ticket lifecycle workflow and resolution gate` <br> `feature/lab4-issue-4-ticket-workflow` | Issue #4 (Ticket Workflow) | `Ponatinylilbug` | Pending | |
 | **#--** | `feat: implement role-based dashboards` <br> `feature/lab4-issue-5-dashboards` | Issue #5 (Role Dashboards) | `Ponatinylilbug` | Pending | |
@@ -43,4 +43,11 @@ All code and specifications in Sprint 4 follow strict engineering discipline:
 - **Author Response (`aranedlek`):**  
   *"รับทราบและขอบคุณครับ ใน Issue 2 (Actions Taken Foundation) จะทำ idempotent seed ที่ครอบคลุม ticket ที่มี 0, 1 และหลาย actions taken พร้อมทั้งสถานะ ticket ครบทุกรูปแบบเพื่อรองรับ dashboard queries ครับ"*
 - **Resolution:** Approved and merged into `lab4-staging` via commit `42ff9e2`.
+
+### PR #40: Actions Taken Foundation and Database (`feature/lab4-issue-2-actions-foundation`)
+- **Reviewer Comment (`Ponatinylilbug`):**  
+  *Pending peer review of Actions Taken model, database migration, idempotent seed, REST APIs, and automated test suite.*
+- **Author Response (`aranedlek`):**  
+  *Implemented ActionTaken model with foreign keys to Ticket and User performer, added version field for OCC, wrote idempotent seed covering 0, 1, and multiple actions taken, created GET/POST/PATCH endpoints with strict BR-03, BR-04, BR-05, BR-06 validation, and verified 100% pass across 43 automated tests.*
+- **Resolution:** Under review.
 
