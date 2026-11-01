@@ -30,7 +30,7 @@ All code and specifications in Sprint 4 follow strict engineering discipline:
 | **#40** | `feat: implement Actions Taken foundation and database` <br> `feature/lab4-issue-2-actions-foundation` | Issue #2 (Actions Taken Foundation) | `Ponatinylilbug` | **Approved & Merged ✅** | `afee134` |
 | **#41** | `feat: implement Actions Taken UI on Ticket Detail` <br> `feature/lab4-issue-3-actions-ui` | Issue #3 (Actions Taken UI) | `Ponatinylilbug` | **Approved & Merged ✅** | `1d6a93f` |
 | **#42** | `feat: enforce Ticket lifecycle workflow and resolution gate` <br> `feature/lab4-issue-4-ticket-workflow` | Issue #4 (Ticket Workflow) | `Ponatinylilbug` | **Approved & Merged ✅** | `937eaf5` |
-| **#--** | `feat: implement role-based dashboards` <br> `feature/lab4-issue-5-dashboards` | Issue #5 (Role Dashboards) | `Ponatinylilbug` | Pending | |
+| **#43** | `feat: implement role-based dashboards` <br> `feature/lab4-issue-5-dashboards` | Issue #5 (Role Dashboards) | `Ponatinylilbug` | Pending Review | |
 | **#--** | `chore: final regression, accessibility polish and hardening` <br> `feature/lab4-issue-6-hardening` | Issue #6 (Final Hardening) | `Ponatinylilbug` | Pending | |
 
 ---
@@ -65,7 +65,7 @@ All code and specifications in Sprint 4 follow strict engineering discipline:
   *Implemented PATCH /api/tickets/:id/status adhering strictly to BR-08 transition matrix, built POST /api/tickets/:id/resolve-advisory for requester satisfaction flagging without status elevation (BR-09), implemented optimistic concurrency version checking returning HTTP 409 Conflict upon collision (BR-10), updated StaffTicketDetail to dynamically restrict next status options according to role and state, added accessible conflict notification banner with refresh trigger, and authored comprehensive backend and frontend test suites (13 backend tests, 7 frontend tests passing 100%).*
 - **Resolution:** Approved and merged into `lab4-staging` via commit `937eaf5`.
 
-### PR (Issue 5): Role-based Dashboards (`feature/lab4-issue-5-dashboards`)
+### PR #43: Role-based Dashboards (`feature/lab4-issue-5-dashboards`)
 - **Reviewer Comment (`Ponatinylilbug`):**  
   *Pending peer review of IT Staff Dashboard (/staff/dashboard), Requester Dashboard (/requester/dashboard), Authoritative Prisma aggregations (BR-11), strict Requester data isolation (BR-12), graceful zero-metric and empty states (BR-13), responsive layout, and automated test suites.*
 - **Author Response (`aranedlek`):**  
